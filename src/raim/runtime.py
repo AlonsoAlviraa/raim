@@ -30,7 +30,9 @@ class ExternalContext:
         self.features: dict = {}
         self.brain.context_fn = lambda: {"fast_features": dict(self.features),
                                          "symbol": cfg.venue.symbol}
-        self._m_jev = 0.5
+        self.jev_enabled = False   # Jev is ignored until a calibration report passes
+        self.calibration: dict | None = None
+        self._m_jev = 1.0
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
 
@@ -45,13 +47,25 @@ class ExternalContext:
     def multipliers(self, _now_ms: int = 0) -> tuple[float, float]:
         return self.brain.multiplier(), self._m_jev
 
+    def set_calibration(self, report: dict) -> None:
+        """report from research.calibration.calibration_gate on recorded data."""
+        self.calibration = dict(report)
+        self.jev_enabled = bool(report.get("passed", False))
+        log.info("Jev calibration passed=%s -> jev_enabled=%s", report.get("passed"), self.jev_enabled)
+
+    def _jev_tick(self, features: dict) -> None:
+        if not self.jev_enabled:
+            self._m_jev = 1.0      # uncalibrated judge: not trusted, not used
+            return
+        try:
+            d = self.jev.ask(dict(features))
+        except Exception:  # noqa: BLE001
+            d = CONSERVATIVE
+        self._m_jev = jev_multiplier(d, self.cfg.jev.min_confidence)
+
     def _jev_loop(self) -> None:
         while not self._stop.is_set():
-            try:
-                d = self.jev.ask(dict(self.features))
-            except Exception:  # noqa: BLE001
-                d = CONSERVATIVE
-            self._m_jev = jev_multiplier(d, self.cfg.jev.min_confidence)
+            self._jev_tick(self.features)
             self._stop.wait(1.0)
 
     def start(self) -> None:
