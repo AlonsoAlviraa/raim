@@ -130,7 +130,10 @@ backtests diarios/horarios, sin order book ni órdenes). Nunca entra en el bucle
   no una librería ni CLI headless; este código se implementó directamente.
 - Datos sintéticos: solo para tests. El smoke real (60 s BTCUSDT) es demasiado corto para
   conclusiones.
-- Book: el SimExchange usa el top-of-book; profundidad multi-nivel solo para `depth`.
+- Book: el SimExchange usa la profundidad L2 visible para la posición en cola (fase 2, SIM-1);
+  niveles más allá de la profundidad visible = cola desconocida (solo llenan por trade-through).
+- Hallazgos abiertos de revisión: ver `docs/reviews/` y `docs/AGENT_LOG.md`. Arquitectura:
+  `docs/design/ARCHITECTURE.md`.
 
 ## Riesgos y lo que podría estar mal
 - Con BTCUSDT el spread típico es 1 tick (~0.0014 bps): **el first gate falla** con
