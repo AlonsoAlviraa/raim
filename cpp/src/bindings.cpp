@@ -16,6 +16,11 @@ PYBIND11_MODULE(raim_core, m) {
       .def(py::init<std::vector<double>, HMMFilter::Mat, HMMFilter::Mat, HMMFilter::Mat>())
       .def("set_transition", &HMMFilter::set_transition).def("step", &HMMFilter::step);
   m.def("quote", &quote);
+  m.def("exposure_adjust", &exposure_adjust);
+  py::class_<FlowCPD>(m, "FlowCPD")
+      .def(py::init<double, double, double, int, int>(), py::arg("hazard") = 0.01, py::arg("a0") = 1.0,
+           py::arg("b0") = 1.0, py::arg("max_run") = 200, py::arg("short_run") = 30)
+      .def("update", &FlowCPD::update);
   py::class_<Decision>(m, "Decision")
       .def_readonly("allow_bid", &Decision::allow_bid).def_readonly("allow_ask", &Decision::allow_ask)
       .def_readonly("cancel_all", &Decision::cancel_all).def_readonly("halted", &Decision::halted)
@@ -32,7 +37,10 @@ PYBIND11_MODULE(raim_core, m) {
       .def_property_readonly("m_llm", &RiskGovernor::m_llm).def_property_readonly("m_jev", &RiskGovernor::m_jev)
       .def_property_readonly("loss_streak", &RiskGovernor::loss_streak);
   py::class_<SimExchange>(m, "SimExchange")
-      .def(py::init<double, double, double, double, double, double, uint64_t>())
+      .def(py::init<double, double, double, double, double, double, uint64_t, double>(), py::arg("maker_bps"),
+           py::arg("rebate_bps"), py::arg("ack_ms"), py::arg("jitter_ms"), py::arg("cancel_ms"), py::arg("stress"),
+           py::arg("seed"), py::arg("taker_bps") = 5.0)
+      .def("take", &SimExchange::take).def("queue_ahead", &SimExchange::queue_ahead)
       .def("place", &SimExchange::place).def("cancel", &SimExchange::cancel)
       .def("open_orders", &SimExchange::open_orders).def("on_book", &SimExchange::on_book)
       .def("on_trade", &SimExchange::on_trade).def("on_book_l2", &SimExchange::on_book_l2)

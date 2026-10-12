@@ -171,6 +171,57 @@ inline std::tuple<double, double, double, double> quote(double mid, double sigma
   return {bid, ask, res, half};
 }
 
+// Beta-Bernoulli BOCPD on flow sign (Adams & MacKay 2007; Moret & Lillo arXiv:2609.11614).
+class FlowCPD {
+ public:
+  FlowCPD(double hazard = 0.01, double a0 = 1.0, double b0 = 1.0, int max_run = 200, int short_run = 30)
+      : h_(hazard), a0_(a0), b0_(b0), max_run_(max_run), short_run_(short_run), r_{1.0}, n1_{0.0}, n_{0.0} {}
+  std::vector<double> update(int sign) {
+    double x = sign > 0 ? 1.0 : 0.0;
+    size_t k = r_.size();
+    std::vector<double> r(k + 1), n1(k + 1), n(k + 1);
+    double cp = 0.0;
+    for (size_t i = 0; i < k; ++i) {
+      double pb = (a0_ + n1_[i]) / (a0_ + b0_ + n_[i]);
+      double pred = x == 1.0 ? pb : 1.0 - pb;
+      double w = r_[i] * pred;
+      r[i + 1] = w * (1.0 - h_);
+      cp += w * h_;
+      n1[i + 1] = n1_[i] + x; n[i + 1] = n_[i] + 1.0;
+    }
+    r[0] = cp; n1[0] = 0.0; n[0] = 0.0;
+    if ((int)r.size() > max_run_) { r.resize(max_run_); n1.resize(max_run_); n.resize(max_run_); }
+    double s = 0.0; for (double v : r) s += v;
+    if (s > 0.0) { for (auto& v : r) v /= s; } else { std::fill(r.begin(), r.end(), 0.0); r[0] = 1.0; }
+    r_ = std::move(r); n1_ = std::move(n1); n_ = std::move(n);
+    double pc = 0.0, eb = 0.0;
+    for (size_t i = 0; i < r_.size(); ++i) {
+      if ((int)i < short_run_) pc += r_[i];
+      eb += r_[i] * (a0_ + n1_[i]) / (a0_ + b0_ + n_[i]);
+    }
+    return {pc, 2.0 * eb - 1.0};
+  }
+ private:
+  double h_, a0_, b0_; int max_run_, short_run_;
+  std::vector<double> r_, n1_, n_;
+};
+
+// Queue-adjusted exposure asymmetry; only widens / shrinks. Mirrors quoter_ref.exposure_adjust.
+inline std::tuple<double, double, double, double> exposure_adjust(double qa_bid, double qa_ask, double flow_bias,
+    double p_change, double k_flow, double k_queue, double max_extra) {
+  if (std::isnan(qa_bid) || std::isnan(qa_ask) || std::isnan(flow_bias) || std::isnan(p_change) || max_extra <= 0.0)
+    return {max_extra, max_extra, 0.0, 0.0};
+  const double cap = 1e12;
+  double qb = std::min(std::max(qa_bid, 0.0), cap), qa = std::min(std::max(qa_ask, 0.0), cap);
+  double tot = qb + qa, imb = tot > 0.0 ? (qb - qa) / tot : 0.0;
+  double fb = std::min(std::max(flow_bias, -1.0), 1.0), pc = std::min(std::max(p_change, 0.0), 1.0);
+  double amp = 1.0 + pc;
+  double ax = k_flow * std::max(fb, 0.0) * amp + k_queue * std::max(imb, 0.0);
+  double bx = k_flow * std::max(-fb, 0.0) * amp + k_queue * std::max(-imb, 0.0);
+  bx = std::min(std::max(bx, 0.0), max_extra); ax = std::min(std::max(ax, 0.0), max_extra);
+  return {bx, ax, 1.0 - bx / max_extra, 1.0 - ax / max_extra};
+}
+
 struct Decision {
   bool allow_bid, allow_ask, cancel_all, halted;
   double size_mult, spread_mult, qmax; std::string reason;
@@ -233,8 +284,26 @@ using Fill = std::tuple<int64_t, int, double, double, double, int64_t>;  // id, 
 
 class SimExchange {
  public:
-  SimExchange(double maker_bps, double rebate_bps, double ack, double jit, double cxl, double stress, uint64_t seed)
-      : fee_((maker_bps - rebate_bps) * 1e-4), ack_(ack), jit_(jit), cxl_(cxl), stress_(stress), rng_(seed) {}
+  SimExchange(double maker_bps, double rebate_bps, double ack, double jit, double cxl, double stress, uint64_t seed,
+              double taker_bps = 5.0)
+      : fee_((maker_bps - rebate_bps) * 1e-4), taker_fee_(taker_bps * 1e-4), ack_(ack), jit_(jit), cxl_(cxl),
+        stress_(stress), rng_(seed) {}
+  double queue_ahead(int64_t id) const {
+    auto it = orders_.find(id);
+    return (it != orders_.end() && it->second.state == 1) ? it->second.qa : nan();
+  }
+  std::vector<Fill> take(int64_t now, int side, double qty, double limit_px) {
+    auto& px = side == 1 ? apx_ : bpx_; auto& qs = side == 1 ? aqs_ : bqs_;
+    std::vector<Fill> out; double rem = qty; ++n_msgs;
+    for (size_t i = 0; i < px.size(); ++i) {
+      if (rem <= 1e-12) break;
+      if ((side == 1 && px[i] > limit_px) || (side == -1 && px[i] < limit_px)) break;
+      double q = std::min(rem, qs[i]); if (q <= 0.0) continue;
+      qs[i] -= q; rem -= q;
+      out.emplace_back(0, side, px[i], q, px[i] * q * taker_fee_, now);
+    }
+    return out;
+  }
   int64_t place(int64_t now, int side, double px, double qty) {
     int64_t id = next_id_++;
     orders_[id] = Order{id, side, px, qty, now + lat(ack_), 0, 0.0, -1};
@@ -313,7 +382,7 @@ class SimExchange {
     o.qty -= q; out.emplace_back(o.id, o.side, o.price, q, o.price * q * fee_, ts);
     if (o.qty <= 1e-12) o.state = 2; return q;
   }
-  double fee_, ack_, jit_, cxl_, stress_; SplitMix64 rng_;
+  double fee_, taker_fee_, ack_, jit_, cxl_, stress_; SplitMix64 rng_;
   std::map<int64_t, Order> orders_; int64_t next_id_ = 1;
   double bid_ = 0, bq_ = 0, ask_ = 0, aq_ = 0;
   std::vector<double> bpx_, bqs_, apx_, aqs_;
