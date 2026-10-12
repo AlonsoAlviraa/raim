@@ -1,0 +1,26 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv python install ${{ matrix.python }}
+      - name: Install (pure Python)
+        run: uv sync --python ${{ matrix.python }}
+      - name: Tests, pure-Python backend
+        run: uv run pytest -q
+        env: { RAIM_BACKEND: python }
+      - name: Build optional C++ extension (MSVC on Windows, gcc on Linux)
+        run: uv pip install ./cpp
+      - name: Tests incl. C++ parity + risk on C++ governor
+        run: uv run pytest -q
+        env: { RAIM_BACKEND: cpp }
+      - name: Benchmark (informational)
+        run: uv run raim bench --n 50000
