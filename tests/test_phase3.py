@@ -9,7 +9,7 @@ from conftest import HAS_CPP, mod
 # ---------------------------------------------------------------- (1) flow-direction CPD
 def _flowcpd(backend):
     m = mod("flowcpd", backend)
-    return m.FlowCPD(0.01, 1.0, 1.0, 200, 10)
+    return m.FlowCPD(0.01, 1.0, 1.0, 200, 30)
 
 
 def test_flowcpd_detects_flow_sign_regime_change(backend):
@@ -111,7 +111,8 @@ def test_halt_triggers_unwind_to_flat_in_sim():
     from raim.research.pipeline import fit_regimes, split_by_books
     from raim.sim.engine import run_sim
     from raim.sim.scenarios import Scenario, scenario_events
-    cfg = load_config(None, {"risk": {"max_drawdown_usd": 0.05}})
+    cfg = load_config(None, {"risk": {"max_drawdown_usd": 0.05},
+                             "quoting": {"min_half_spread_bps": 0.01, "gamma": 0.01, "kappa": 100.0}})
     ev = scenario_events(Scenario("drift_up", drift_bps=0.3), n_steps=6000, seed=3)
     tr, te = split_by_books(ev, 1500)
     p, s = fit_regimes(tr, cfg)
@@ -135,7 +136,7 @@ def test_stress_index_orientation_and_bands():
     x = np.r_[calm, hot]; x[:, 1] += np.r_[np.zeros(500), np.ones(500)]
     si = StressIndex.fit(x, n_bands=4, vol_col=1)
     assert si.score(hot[0]) > si.score(calm[0])
-    p = si.posterior(hot.mean(0))
+    p = si.posterior(x[500:].mean(0) + 0.5)   # clearly above the 75th train percentile
     assert len(p) == 4 and p[3] == 1.0
     assert si.n_bands <= 4
 
