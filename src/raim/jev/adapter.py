@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import abc
 import logging
+import math
 import os
 import time
 from dataclasses import dataclass
@@ -51,6 +52,27 @@ def jev_multiplier(d: JevDecision, min_confidence: float) -> float:
     return max(0.0, min(1.0, m))
 
 
+def _clamp01(x: float) -> float:
+    if not math.isfinite(x):
+        raise ValueError(f"non-finite probability {x!r}")
+    return min(max(x, 0.0), 1.0)
+
+
+def parse_answers(ans: dict[str, Any], latency_ms: float) -> JevDecision:
+    """Validate a /v1/systemone answers map. Missing questions or non-finite values raise
+    (caller falls back conservatively); out-of-range values are clamped; regime probs are
+    completed to R1..R4 and renormalized."""
+    p = _clamp01(float(ans["toxic_flow"]["noul"]))
+    raw = ans["regime"]["probabilities"]
+    probs = {k: _clamp01(float(raw.get(k, 0.0))) for k in ("R1", "R2", "R3", "R4")}
+    s = sum(probs.values())
+    if s <= 0.0:
+        raise ValueError("empty regime distribution")
+    probs = {k: v / s for k, v in probs.items()}
+    conf = _clamp01(float(ans["regime"].get("confidence", 0.0)))
+    return JevDecision(p, probs, conf, latency_ms, "jev")
+
+
 class JevClient(abc.ABC):
     @abc.abstractmethod
     def ask(self, state: dict[str, Any]) -> JevDecision: ...
@@ -82,10 +104,7 @@ class HttpJev(JevClient):
                                               "questions": QUESTIONS})
             r.raise_for_status()
             ans = r.json()["answers"]
-            p = float(ans["toxic_flow"]["noul"])
-            probs = {k: float(v) for k, v in ans["regime"]["probabilities"].items()}
-            conf = float(ans["regime"].get("confidence", 0.0))
-            return JevDecision(p, probs, conf, (time.perf_counter() - t0) * 1e3, "jev")
+            return parse_answers(ans, (time.perf_counter() - t0) * 1e3)
         except Exception as exc:  # noqa: BLE001
             log.warning("Jev call failed (%r); conservative fallback", exc)
             return CONSERVATIVE
