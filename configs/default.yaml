@@ -1,0 +1,71 @@
+mode: simulation          # simulation | paper | live (live hard-fails)
+seed: 42
+venue:
+  name: binance
+  symbol: BTCUSDT
+  ws_url: wss://data-stream.binance.vision/ws   # public market-data-only endpoint
+  depth_levels: 20
+  depth_speed_ms: 100
+fees:
+  maker_bps: 1.0          # VERIFY your actual tier on the venue
+  taker_bps: 1.0
+  rebate_bps: 0.0
+features:
+  vol_window: 200
+  ofi_window: 50
+  vpin_bucket_volume: 5.0
+  vpin_buckets: 50
+  vr_lag: 10
+  hawkes_window: 500
+regime:
+  n_states: 4
+  pull_on: 0.7
+  pull_off: 0.4
+  conservative_bias: 0.15
+  cpd_hazard: 0.004
+  cpd_alarm: 0.5
+quoting:
+  gamma: 0.1
+  kappa: 1.5
+  horizon_s: 10.0
+  min_half_spread_bps: 0.5
+  order_size: 0.001
+  tick_size: 0.01
+  regime_params:            # per-regime theta_k: [gamma_mult, spread_mult, size_mult]
+    R1: [1.0, 1.0, 1.0]
+    R2: [2.0, 1.6, 0.6]
+    R3: [3.0, 2.5, 0.4]
+    R4: [6.0, 5.0, 0.0]
+risk:
+  budget_usd: 50.0          # B: max tolerated loss in unwind
+  z: 2.33
+  h_unwind_s: 30.0
+  depth_frac: 0.1           # c
+  max_gross_usd: 500.0
+  max_drawdown_usd: 25.0
+  stale_feed_ms: 2000
+  max_reject_rate: 0.2
+  max_msgs_per_s: 10.0
+  loss_streak_widen: 3
+  loss_streak_pause: 6
+  pause_s: 60.0
+sim:
+  ack_latency_ms: 30.0
+  ack_jitter_ms: 10.0
+  cancel_latency_ms: 30.0
+  latency_stress: 1.0       # set 2.0 for stress test
+  slippage_bps: 0.5
+slow_brain:
+  provider: mock            # mock | anthropic
+  model: claude-opus-5-5
+  poll_interval_s: 60.0
+  min_call_spacing_s: 1.0
+  tau_s: 600.0
+  mcp_command: ["uvx", "--from", "tradingview-mcp-server", "tradingview-mcp"]
+jev:
+  provider: mock            # mock | http
+  model: jev-latest
+  timeout_ms: 500
+  min_confidence: 0.6
+audit:
+  dir: logs
