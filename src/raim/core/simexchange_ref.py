@@ -36,8 +36,10 @@ class _Order:
 
 class SimExchange:
     def __init__(self, maker_fee_bps: float, rebate_bps: float, ack_ms: float,
-                 jitter_ms: float, cancel_ms: float, stress: float, seed: int) -> None:
+                 jitter_ms: float, cancel_ms: float, stress: float, seed: int,
+                 taker_fee_bps: float = 5.0) -> None:
         self.fee = (maker_fee_bps - rebate_bps) * 1e-4
+        self.taker_fee = taker_fee_bps * 1e-4
         self.ack = ack_ms
         self.jit = jitter_ms
         self.cxl = cancel_ms
@@ -82,6 +84,31 @@ class SimExchange:
         if o is not None and o.state != DONE and o.cancel_at < 0:
             o.cancel_at = now_ms + self._lat(self.cxl)
             self.n_msgs += 1
+
+    def queue_ahead(self, oid: int) -> float:
+        o = self.orders.get(oid)
+        return o.queue_ahead if o is not None and o.state == ACTIVE else float("nan")
+
+    def take(self, now_ms: int, side: int, qty: float, limit_px: float) -> list:
+        """Immediate taker execution against the LAST visible L2 snapshot (sim only, used by
+        the deterministic unwinder). Walks levels up to `limit_px`; consumes visible size so a
+        repeated take in the same snapshot cannot reuse liquidity. Fill id = 0."""
+        px, qs = (self.apx, self.aqs) if side == BID else (self.bpx, self.bqs)
+        out: list = []
+        rem = qty
+        self.n_msgs += 1
+        for i in range(len(px)):
+            if rem <= 1e-12:
+                break
+            if (side == BID and px[i] > limit_px) or (side == ASK and px[i] < limit_px):
+                break
+            q = min(rem, qs[i])
+            if q <= 0.0:
+                continue
+            qs[i] -= q
+            rem -= q
+            out.append((0, side, px[i], q, px[i] * q * self.taker_fee, now_ms))
+        return out
 
     def open_orders(self) -> list[tuple[int, int, float, float, int]]:
         return [(o.oid, o.side, o.price, o.qty, o.state) for o in self.orders.values()
