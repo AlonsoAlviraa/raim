@@ -73,13 +73,16 @@ class RiskGovernor:
     def evaluate(self, now_ms: int, last_feed_ms: int, equity: float, position: float,
                  mid: float, sigma_frac_s: float, depth_qty: float, reject_rate: float,
                  msg_rate: float) -> Decision:
-        if equity > self.peak:
+        finite = math.isfinite(equity) and math.isfinite(position)
+        if finite and equity > self.peak:
             self.peak = equity
-        if self.peak - equity >= self.max_dd:
+        if finite and self.peak - equity >= self.max_dd:
             self.halted = True
         qm = self.qmax(sigma_frac_s, mid, depth_qty)
         if self.halted:
             return Decision(False, False, True, True, 0.0, 1.0, qm, "drawdown_halt")
+        if not finite:
+            return Decision(False, False, True, False, 0.0, 1.0, qm, "bad_input")
         if now_ms - last_feed_ms > self.stale_ms or not (mid > 0.0):
             return Decision(False, False, True, False, 0.0, 1.0, qm, "stale_feed")
         if now_ms < self.pause_until:
