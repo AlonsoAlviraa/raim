@@ -62,3 +62,39 @@ Después: 86 passed con RAIM_BACKEND=python y 86 passed con RAIM_BACKEND=cpp.
 - 4ee556b 14:57 [sim] SIM-1 L2 queue position (unknown depth = infinite queue), SIM-2 single receive clock, wiring of slow context/features
 - 7591297 14:57 [slowbrain] BRAIN-1: forward fast features + symbol as MCP/LLM context; expose slow_context for HMM tilt
 - 46b5bf3 14:57 [jev] JEV-2: validate/clamp answers, complete+renormalize regime probs, non-finite -> fallback
+
+## Fase 3 — 2026-10-12 ~16:49–17:15, rama `phase3-research` (sin push)
+**Autoría:** el mismo agente executor único (Grok Bot). Tampoco hubo sub-agentes ni revisores
+independientes. Otro agente trabajaba en paralelo en la rama `gate-scan` (`src/raim/data/`,
+`scripts/gate_scan.py`); esta fase **no tocó** esos ficheros. Nota (Ulesov et al.,
+arXiv:2609.28090): una revisión hecha por agentes puede dar falsos positivos y negativos y no
+sustituye a los tests deterministas. Por eso cada cambio tiene tests, incluidos controles
+limpios (p. ej. "un contexto negativo no afloja", "un Jev sin calibrar no se usa").
+
+| Rol | Cambio | Ficheros | Tests (primero en rojo) | Resultado |
+|---|---|---|---|---|
+| features | (1) FlowCPD (Moret & Lillo) | core/flowcpd_ref.py, cpp FlowCPD | detección, causalidad, paridad | hecho; short_run 10→30 tras ver la sensibilidad (documentado) |
+| quoting | (2) asimetría de exposición por cola | quoter_ref.exposure_adjust, C++ | monotonía, dirección, NaN, paridad | hecho |
+| research | (3) dial de estrés vs HMM | research/stress_index.py, pipeline | orientación, informe | hecho; resultado sintético no concluyente |
+| research/sim | (4) CVaR, sesgo de inventario, batería | research/robustness.py, sim/scenarios.py | cvar, bootstrap, batería | hecho; hallazgos PH3-1..3 abiertos |
+| research | (5) ablación con costes | research/ablation.py | brazos y costes | hecho (sin proveedores reales) |
+| research | (6) registro + DSR + validador congelado | research/registry.py | DSR, append-only, freeze/verify | hecho |
+| jev | (7) calibración antes de usar | research/calibration.py, runtime.py | métricas, gate, no calibrado ⇒ ignorado | hecho; calibración real pendiente |
+| slowbrain | (8) pin 0.8.1 + rechazo de npm | slowbrain/mcp_client.py, config | rechazos, escaneo del repo | hecho |
+| risk | RISK-2 unwind tras halt, RISK-3 profundidad por lado | execution/unwind.py, SimExchange.take, engine | plan, take, halt⇒plano, unwind_depth | hecho |
+
+Rojo: `docs/reviews/red_run_phase3.txt`. Verde final: python `118 passed in 42.54s`; cpp `118 passed in 20.99s`.
+
+### Commits fase 3
+- aa87ce6 17:02 [docs] phase 3: research changes with citations, reports (synthetic), review updates, README, ARCHITECTURE
+- e077698 17:02 [tests] phase 3 test fixes found during green-up (stress-index probe point, unwind test config, FlowCPD short_run=30)
+- 5a6fe35 17:02 [ops] CLI: stress, compare-regimes, trial registry recording
+- c22f6b8 17:02 [slowbrain] pin tradingview-mcp-server==0.8.1, validate_mcp_command refuses npm/npx/node/unpinned
+- e51596d 17:02 [jev] Jev ignored until calibration gate passes (set_calibration/_jev_tick)
+- f211525 17:02 [research] stress-index baseline vs HMM, CVaR/inventory-bias/stress battery, cost-aware ablation, trial registry + DSR + frozen validator, Jev calibration
+- f43f34a 17:02 [risk] RISK-2 deterministic post-halt unwind (passive->aggressive, reduce-only, sim) + RISK-3 side-aware depth; engine wiring of FlowCPD/exposure
+- 7499324 17:02 [cpp] FlowCPD, exposure_adjust, SimExchange.take/queue_ahead/taker fee in raim_core; backend export
+- dd0bdf4 17:02 [sim] SimExchange taker take() over L2 + queue_ahead accessor; stress scenario generator (Py ref)
+- e05f643 17:02 [quoting] queue-adjusted exposure asymmetry (widen/shrink only), Py ref
+- dac08ee 17:02 [features] FlowCPD: Beta-Bernoulli BOCPD on flow sign as fast-body feature (Moret & Lillo 2609.11614), Py ref
+- 9ade288 16:51 [tests] phase 3 research changes as failing tests (tests-first, red)
