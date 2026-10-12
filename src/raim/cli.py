@@ -64,6 +64,7 @@ def cmd_walkforward(args, cfg, audit) -> None:
     df = walk_forward(_events(args, cfg), cfg, args.folds)
     log.info("walk-forward (purged+embargoed):\n%s", df.round(4).to_string())
     audit.write("walkforward", folds=df.to_dict("records"))
+    _registry(cfg, "walkforward", df)
 
 
 def cmd_gate(args, cfg, audit) -> None:
@@ -122,6 +123,30 @@ def cmd_paper(args, cfg, audit) -> None:
     audit.write("paper", **summary)
 
 
+def _registry(cfg, kind: str, df) -> None:
+    from raim.research.registry import TrialRegistry
+    reg = TrialRegistry(Path(cfg.audit.dir) / "trials.jsonl")
+    reg.record({"kind": kind, "config_hash": cfg.hash()}, {"rows": df.to_dict("records")})
+    log.info("trial registry: %d trials so far (use for Deflated Sharpe N)", reg.n_trials())
+
+
+def cmd_stress(args, cfg, audit) -> None:
+    from raim.research.robustness import stress_battery
+    df = stress_battery(cfg, seeds=tuple(range(1, args.seeds + 1)), n_steps=args.steps)
+    log.info("stress battery (SYNTHETIC scenarios; CVaR in USD per episode):\n%s", df.round(5).to_string())
+    audit.write("stress", rows=df.to_dict("records"))
+    _registry(cfg, "stress", df)
+
+
+def cmd_compare(args, cfg, audit) -> None:
+    from raim.research.pipeline import compare_regime_models
+    df = compare_regime_models(_events(args, cfg), cfg, args.folds)
+    log.info("HMM vs stress-index (purged walk-forward; report only):\n%s", df.round(5).to_string())
+    log.info("means by model:\n%s", df.groupby("model").mean(numeric_only=True).round(5).to_string())
+    audit.write("compare_regimes", rows=df.to_dict("records"))
+    _registry(cfg, "compare_regimes", df)
+
+
 def cmd_bench(args, cfg, audit) -> None:
     from raim.bench import run_bench
 
@@ -145,6 +170,8 @@ def main(argv: list[str] | None = None) -> None:
         s.add_argument("--folds", type=int, default=4)
         s.add_argument("--horizon-ms", type=int, default=5000)
         s.add_argument("--latency-stress", type=float, default=None)
+    s = sub.add_parser("stress"); s.add_argument("--seeds", type=int, default=3); s.add_argument("--steps", type=int, default=8000)
+    s = sub.add_parser("compare-regimes"); s.add_argument("--data", default=None); s.add_argument("--steps", type=int, default=20_000); s.add_argument("--folds", type=int, default=4)
     s = sub.add_parser("paper"); s.add_argument("--seconds", type=float, default=300); s.add_argument("--warmup", type=float, default=120); s.add_argument("--warmup-file", default="data/paper_warmup.jsonl")
     s = sub.add_parser("bench"); s.add_argument("--n", type=int, default=200_000)
     args = p.parse_args(argv)
@@ -160,7 +187,8 @@ def main(argv: list[str] | None = None) -> None:
     audit.write("start", cmd=args.cmd, backend=core.BACKEND, config=cfg.to_dict())
     log.info("run_id=%s backend=%s mode=%s", run_id, core.BACKEND, cfg.mode)
     {"record": cmd_record, "sim": cmd_sim, "walkforward": cmd_walkforward, "gate": cmd_gate,
-     "paper": cmd_paper, "bench": cmd_bench}[args.cmd](args, cfg, audit)
+     "paper": cmd_paper, "bench": cmd_bench,
+     "stress": cmd_stress, "compare-regimes": cmd_compare}[args.cmd](args, cfg, audit)
     audit.write("end")
 
 
