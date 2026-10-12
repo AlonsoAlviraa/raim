@@ -92,7 +92,7 @@ observado.
   Podría servir como *overlay* para capital que ya está en spot (por ejemplo, cubrir parte
   cuando el funding medio de 21 prints supera 1 bp). Riesgos no modelados: contraparte del
   exchange (FTX), liquidación de la pata corta en subidas violentas y tipos de interés.
-- **S3 (Donchian ensemble).** Es la única con algo de evidencia: Sharpe OOS 1,17 (0,78 en exceso
+- **S3 (Donchian ensemble).** [Actualización ronda 2: con universo PIT (C7 en `strategies_convex_2026-10.md`) el Sharpe cae a 0,70 → KILL.] Es la única con algo de evidencia: Sharpe OOS 1,17 (0,78 en exceso
   de caja), DSR de familia 0,97, max DD −15 % frente a −52 % de BTC y 3 de 4 folds positivos.
   **Pero** el Sharpe es casi igual al de mantener BTC en el mismo periodo (1,15) y la rentabilidad
   es mucho menor (12 % frente a 53 % anual): su valor es reducir el drawdown, no generar alpha.

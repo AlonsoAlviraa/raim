@@ -1,0 +1,86 @@
+{
+  "name": "C1_intraday_tsmom_30m_stress2x",
+  "metrics": {
+    "n_days": 1396,
+    "sr_daily": -0.14468123565729007,
+    "sharpe": -2.764131126092232,
+    "ann_ret": -0.0791555071747202,
+    "ann_vol": 0.02967040676595899,
+    "max_dd": -0.28520964169943275,
+    "cvar5": -0.004929356698709387,
+    "skew": -4.194916488304966,
+    "kurt": 65.3175200339279,
+    "total_ret": -0.2705007599893742,
+    "pct_days_active": 0.18553008595988538,
+    "turnover_ann": 78.26408787010506,
+    "cost_ann": 0.07043767908309455,
+    "funding_ann": -6.322657593123214e-05,
+    "gross_ann": -0.01151198920657904,
+    "folds_positive": 0,
+    "n_folds": 4,
+    "n_trades": 449,
+    "time_to_recovery_days": 1394,
+    "daily_skew": -4.194916488304966,
+    "win_rate": 0.24276169265033407,
+    "payoff": 1.0109131183909355,
+    "profit_factor": 0.32408685266062337,
+    "trade_skew": -1.4388970103414795,
+    "top5pct_share": NaN,
+    "longest_losing_streak": 25
+  },
+  "folds": [
+    {
+      "test_start": "2022-12-03",
+      "test_end": "2023-11-16",
+      "param": {
+        "h": 0,
+        "k": 1.0,
+        "lo": true
+      },
+      "train_sr_daily": -0.08383735306616029,
+      "oos_sharpe": -4.3565909660551645,
+      "oos_total_ret": -0.07971096415729395
+    },
+    {
+      "test_start": "2023-11-18",
+      "test_end": "2024-10-31",
+      "param": {
+        "h": 13,
+        "k": 1.0,
+        "lo": true
+      },
+      "train_sr_daily": -0.08949401435227916,
+      "oos_sharpe": -2.2170672498287947,
+      "oos_total_ret": -0.06515612241752422
+    },
+    {
+      "test_start": "2024-11-02",
+      "test_end": "2025-10-16",
+      "param": {
+        "h": 13,
+        "k": 1.0,
+        "lo": true
+      },
+      "train_sr_daily": -0.09168556987241815,
+      "oos_sharpe": -3.43686208957486,
+      "oos_total_ret": -0.11980698514644161
+    },
+    {
+      "test_start": "2025-10-18",
+      "test_end": "2026-10-01",
+      "param": {
+        "h": 13,
+        "k": 1.0,
+        "lo": true
+      },
+      "train_sr_daily": -0.10522046361859373,
+      "oos_sharpe": -1.5380666897035582,
+      "oos_total_ret": -0.03665113510611995
+    }
+  ],
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT"
+  ]
+}

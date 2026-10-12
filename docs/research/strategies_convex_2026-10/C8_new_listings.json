@@ -1,0 +1,78 @@
+{
+  "name": "C8_new_listings",
+  "metrics": {
+    "n_days": 1388,
+    "sr_daily": -0.07233826460157093,
+    "sharpe": -1.3820206047059915,
+    "ann_ret": -0.1606498811494581,
+    "ann_vol": 0.12133504266495664,
+    "max_dd": -0.505290243590221,
+    "cvar5": -0.016642171227661942,
+    "skew": -1.0838192159443532,
+    "kurt": 32.59839682576041,
+    "total_ret": -0.48622186388469213,
+    "pct_days_active": 0.8170028818443804,
+    "turnover_ann": 1.6882564841498562,
+    "cost_ann": 0.010068004322766572,
+    "funding_ann": 0.0,
+    "gross_ann": -0.1576195247130841,
+    "folds_positive": 0,
+    "n_folds": 4,
+    "n_trades": 178,
+    "time_to_recovery_days": 658,
+    "daily_skew": -1.0838192159443532,
+    "win_rate": 0.29213483146067415,
+    "payoff": 0.8891734335540888,
+    "profit_factor": 0.36696046464137,
+    "trade_skew": 1.536626609117571,
+    "top5pct_share": NaN,
+    "longest_losing_streak": 13
+  },
+  "folds": [
+    {
+      "test_start": "2022-12-05",
+      "test_end": "2023-11-16",
+      "param": {
+        "H": 30,
+        "cond": "mom"
+      },
+      "train_sr_daily": -0.039632163866001484,
+      "oos_sharpe": -0.9239592724664891,
+      "oos_total_ret": -0.0619142928822185
+    },
+    {
+      "test_start": "2023-11-20",
+      "test_end": "2024-10-31",
+      "param": {
+        "H": 30,
+        "cond": "fade_skip"
+      },
+      "train_sr_daily": -0.04468349072848471,
+      "oos_sharpe": -0.8380705150878682,
+      "oos_total_ret": -0.011368856637639757
+    },
+    {
+      "test_start": "2024-11-04",
+      "test_end": "2025-10-16",
+      "param": {
+        "H": 30,
+        "cond": "mom"
+      },
+      "train_sr_daily": -0.03357588939664428,
+      "oos_sharpe": -1.7103035231655621,
+      "oos_total_ret": -0.2960402301102255
+    },
+    {
+      "test_start": "2025-10-20",
+      "test_end": "2026-10-01",
+      "param": {
+        "H": 30,
+        "cond": "mom"
+      },
+      "train_sr_daily": -0.03667038641888275,
+      "oos_sharpe": -2.2219097990482264,
+      "oos_total_ret": -0.21304305588692052
+    }
+  ],
+  "note": "listing = first daily bar in archive after 2021-03-01; long-only spot"
+}

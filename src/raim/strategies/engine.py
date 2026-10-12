@@ -34,18 +34,25 @@ def run(weights: pd.DataFrame, returns: pd.DataFrame, side_cost: dict[str, float
     weights = weights.reindex(returns.index).fillna(0.0)
     held = weights.shift(1 + delay).fillna(0.0)
     gross = (held * returns.fillna(0.0)).sum(axis=1)
-    cvec = pd.Series(side_cost).reindex(held.columns).fillna(0.0)
+    if isinstance(side_cost, pd.DataFrame):      # time-varying per-side cost (e.g. liquidity tiers)
+        cvec = side_cost.reindex(index=held.index, columns=held.columns).ffill().fillna(0.0)
+    else:
+        cvec = pd.Series(side_cost).reindex(held.columns).fillna(0.0)
     trade = held.diff().abs().fillna(held.abs())
-    cost = (trade * cvec).sum(axis=1)
+    cost = (trade * cvec).sum(axis=1) if isinstance(cvec, pd.DataFrame) else (trade * cvec).sum(axis=1)
     fund = pd.Series(0.0, index=held.index)
     if funding is not None:
         f = funding.reindex(held.index).reindex(columns=held.columns).fillna(0.0)
         fund = -(held * f).sum(axis=1)          # long pays positive funding
+    f_inst = 0.0
+    if funding is not None:
+        f_inst = held * funding.reindex(held.index).reindex(columns=held.columns).fillna(0.0)
+    inst = held * returns.fillna(0.0) - trade * cvec - f_inst
     net = gross - cost + fund
     bar = pd.DataFrame({"gross": gross, "cost": cost, "funding": fund, "net": net,
                         "exposure": held.abs().sum(axis=1), "turnover": trade.sum(axis=1)})
     daily = net.groupby(net.index.floor("D")).sum()
-    return BTResult(bar=bar, daily=daily, weights=held)
+    return BTResult(bar=bar, daily=daily, weights=held, meta={"inst": inst})
 
 
 def metrics(daily: pd.Series, bar: pd.DataFrame | None = None) -> dict:

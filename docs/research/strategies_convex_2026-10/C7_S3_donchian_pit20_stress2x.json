@@ -1,0 +1,78 @@
+{
+  "name": "C7_S3_donchian_pit20_stress2x",
+  "metrics": {
+    "n_days": 1372,
+    "sr_daily": 0.031829072845617326,
+    "sharpe": 0.6080935828860876,
+    "ann_ret": 0.04607782093651269,
+    "ann_vol": 0.07924256719126144,
+    "max_dd": -0.15312553953566688,
+    "cvar5": -0.0097638285892924,
+    "skew": 0.10290962020269144,
+    "kurt": 10.030975470713468,
+    "total_ret": 0.18451121859931563,
+    "pct_days_active": 0.9861516034985423,
+    "turnover_ann": 9.881290872937026,
+    "cost_ann": 0.02462493458202918,
+    "funding_ann": 0.0,
+    "gross_ann": 0.07281183118245489,
+    "folds_positive": 3,
+    "n_folds": 4,
+    "n_trades": 1638,
+    "time_to_recovery_days": 654,
+    "daily_skew": 0.10290962020269144,
+    "win_rate": 0.2844932844932845,
+    "payoff": 3.4368678854252415,
+    "profit_factor": 1.3665362070035518,
+    "trade_skew": 6.440322751695216,
+    "top5pct_share": 2.8838966174020895,
+    "longest_losing_streak": 45
+  },
+  "folds": [
+    {
+      "test_start": "2022-12-09",
+      "test_end": "2023-11-16",
+      "param": {
+        "lb": "short",
+        "tv": 0.25
+      },
+      "train_sr_daily": 0.003357976802388747,
+      "oos_sharpe": 1.494291026686903,
+      "oos_total_ret": 0.11970246306999455
+    },
+    {
+      "test_start": "2023-11-24",
+      "test_end": "2024-10-31",
+      "param": {
+        "lb": "short",
+        "tv": 0.25
+      },
+      "train_sr_daily": -0.01008766808812786,
+      "oos_sharpe": 0.4860572387629206,
+      "oos_total_ret": 0.03542966992644914
+    },
+    {
+      "test_start": "2024-11-08",
+      "test_end": "2025-10-16",
+      "param": {
+        "lb": "short",
+        "tv": 0.25
+      },
+      "train_sr_daily": 0.021399188823147095,
+      "oos_sharpe": 0.6379130788531476,
+      "oos_total_ret": 0.04920072509180451
+    },
+    {
+      "test_start": "2025-10-24",
+      "test_end": "2026-10-01",
+      "param": {
+        "lb": "short",
+        "tv": 0.25
+      },
+      "train_sr_daily": 0.024929251337053843,
+      "oos_sharpe": -0.41840855814102923,
+      "oos_total_ret": -0.026227832523048278
+    }
+  ],
+  "universe": "PIT top-20"
+}

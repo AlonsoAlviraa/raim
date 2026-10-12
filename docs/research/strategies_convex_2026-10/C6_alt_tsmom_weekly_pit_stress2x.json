@@ -1,0 +1,82 @@
+{
+  "name": "C6_alt_tsmom_weekly_pit_stress2x",
+  "metrics": {
+    "n_days": 1372,
+    "sr_daily": 0.043665866671247056,
+    "sharpe": 0.8342352113973375,
+    "ann_ret": 0.1827801450957669,
+    "ann_vol": 0.2341766704378109,
+    "max_dd": -0.2942535592202694,
+    "cvar5": -0.028782940398878302,
+    "skew": -0.19202685192258936,
+    "kurt": 12.009193611086019,
+    "total_ret": 0.8794866329314401,
+    "pct_days_active": 0.9730320699708455,
+    "turnover_ann": 11.367018398908385,
+    "cost_ann": 0.028111720816043944,
+    "funding_ann": 0.0,
+    "gross_ann": 0.22347014498305573,
+    "folds_positive": 3,
+    "n_folds": 4,
+    "n_trades": 625,
+    "time_to_recovery_days": 406,
+    "daily_skew": -0.19202685192258936,
+    "win_rate": 0.4128,
+    "payoff": 2.358972435085561,
+    "profit_factor": 1.6583511941473426,
+    "trade_skew": 2.465402141913906,
+    "top5pct_share": 1.1460896251735482,
+    "longest_losing_streak": 16
+  },
+  "folds": [
+    {
+      "test_start": "2022-12-09",
+      "test_end": "2023-11-16",
+      "param": {
+        "N": 20,
+        "L": 4,
+        "tv": 0.5
+      },
+      "train_sr_daily": 0.026600900721270363,
+      "oos_sharpe": 1.3507975703959865,
+      "oos_total_ret": 0.2992939060482469
+    },
+    {
+      "test_start": "2023-11-24",
+      "test_end": "2024-10-31",
+      "param": {
+        "N": 20,
+        "L": 4,
+        "tv": 0.5
+      },
+      "train_sr_daily": 0.004905162024869146,
+      "oos_sharpe": 1.0221149974851853,
+      "oos_total_ret": 0.2272052257274979
+    },
+    {
+      "test_start": "2024-11-08",
+      "test_end": "2025-10-16",
+      "param": {
+        "N": 20,
+        "L": 4,
+        "tv": 0.5
+      },
+      "train_sr_daily": 0.03547616437677606,
+      "oos_sharpe": 0.966028371836781,
+      "oos_total_ret": 0.23668769565251213
+    },
+    {
+      "test_start": "2025-10-24",
+      "test_end": "2026-10-01",
+      "param": {
+        "N": 20,
+        "L": 4,
+        "tv": 0.5
+      },
+      "train_sr_daily": 0.04192957011197666,
+      "oos_sharpe": -0.17396193976589247,
+      "oos_total_ret": -0.04686459069137061
+    }
+  ],
+  "universe": "PIT top-N trailing 30d median quote volume, all archived USDT spot pairs incl. delisted"
+}

@@ -38,13 +38,14 @@ def _read_zip_csv(path: Path, names=None) -> pd.DataFrame:
 def load_klines(symbol: str, market: str = "spot", interval: str = "1h",
                 root: Path = ROOT) -> pd.DataFrame:
     d = {"spot": root / "spot_monthly_klines", "perp": root / "futures_um_monthly",
-         "spot1m": root / "spot_1m"}[market] / symbol
+         "spot1m": root / "spot_1m", "spot1d": root / "spot_1d", "spot30m": root / "spot_30m",
+         "perp15m": root / "perp_15m"}[market] / symbol
     files = sorted(d.glob(f"{symbol}-{interval}-*.zip"))
     if not files:
         raise FileNotFoundError(f"no {market} {interval} klines for {symbol} in {d}")
     df = pd.concat([_read_zip_csv(f, KCOLS) for f in files], ignore_index=True)
     df.columns = KCOLS[: df.shape[1]]
-    step = pd.Timedelta(interval.replace("m", "min")) if interval.endswith("m") else pd.Timedelta(interval)
+    step = pd.Timedelta(interval.replace("m", "min")) if interval.endswith("m") else pd.Timedelta(interval.replace("1d", "1D"))
     df["end"] = _to_dt(df["open_time"]) + step
     df = df.drop_duplicates("end").set_index("end").sort_index()
     for c in ["open", "high", "low", "close", "volume", "quote_volume", "taker_buy_volume"]:

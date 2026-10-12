@@ -1,0 +1,89 @@
+{
+  "name": "C3_squeeze_4h_stress2x",
+  "metrics": {
+    "n_days": 1392,
+    "sr_daily": 0.003244599165009214,
+    "sharpe": 0.061987980009645,
+    "ann_ret": -0.04612914741031959,
+    "ann_vol": 0.37473271182429474,
+    "max_dd": -0.5828589992194496,
+    "cvar5": -0.047161234004454725,
+    "skew": -0.1700494642949071,
+    "kurt": 10.583242604958084,
+    "total_ret": -0.16482125584665053,
+    "pct_days_active": 0.9942528735632183,
+    "turnover_ann": 51.05280172413793,
+    "cost_ann": 0.04594752155172414,
+    "funding_ann": -0.014653837237787359,
+    "gross_ann": 0.08383028263903589,
+    "folds_positive": 1,
+    "n_folds": 4,
+    "n_trades": 999,
+    "time_to_recovery_days": 660,
+    "daily_skew": -0.1700494642949071,
+    "win_rate": 0.34734734734734735,
+    "payoff": 1.9296256371811933,
+    "profit_factor": 1.0269633375795615,
+    "trade_skew": 3.3473285743470083,
+    "top5pct_share": 18.31872027801093,
+    "longest_losing_streak": 22
+  },
+  "folds": [
+    {
+      "test_start": "2022-12-04",
+      "test_end": "2023-11-16",
+      "param": {
+        "kc": 1.5,
+        "a": 4.0
+      },
+      "train_sr_daily": 0.06426471690667782,
+      "oos_sharpe": 1.1366371718393118,
+      "oos_total_ret": 0.3459713015207042
+    },
+    {
+      "test_start": "2023-11-19",
+      "test_end": "2024-10-31",
+      "param": {
+        "kc": 1.5,
+        "a": 4.0
+      },
+      "train_sr_daily": 0.05417758622908393,
+      "oos_sharpe": -0.7500278603095427,
+      "oos_total_ret": -0.24189594535500747
+    },
+    {
+      "test_start": "2024-11-03",
+      "test_end": "2025-10-16",
+      "param": {
+        "kc": 1.5,
+        "a": 4.0
+      },
+      "train_sr_daily": 0.04045555213942994,
+      "oos_sharpe": 0.12052633602378818,
+      "oos_total_ret": -0.03784646317724494
+    },
+    {
+      "test_start": "2025-10-19",
+      "test_end": "2026-10-01",
+      "param": {
+        "kc": 1.5,
+        "a": 4.0
+      },
+      "train_sr_daily": 0.03289636649380774,
+      "oos_sharpe": -0.19452617715835288,
+      "oos_total_ret": -0.14931175319424883
+    }
+  ],
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "DOGEUSDT",
+    "ADAUSDT",
+    "LTCUSDT",
+    "LINKUSDT",
+    "AVAXUSDT"
+  ]
+}
