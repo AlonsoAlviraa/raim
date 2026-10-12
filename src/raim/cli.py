@@ -111,7 +111,8 @@ def cmd_paper(args, cfg, audit) -> None:
                 yield q.get(timeout=1.0)
             except queue.Empty:
                 continue
-    res = run_sim(gen(), cfg, params, scaler, ext_multipliers=ctx.multipliers)
+    res = run_sim(gen(), cfg, params, scaler, ext_multipliers=ctx.multipliers,
+                  slow_context=ctx.slow_context, on_features=ctx.update_features)
     stop.set()
     ctx.stop()
     summary = {"mode": "paper", "books": res.n_books, "fills": len(res.fills),

@@ -28,9 +28,19 @@ class ExternalContext:
                                         cfg.slow_brain.tau_s)
         self.jev = jev or make_jev(cfg.jev.provider, cfg.jev.model, cfg.jev.timeout_ms)
         self.features: dict = {}
+        self.brain.context_fn = lambda: {"fast_features": dict(self.features),
+                                         "symbol": cfg.venue.symbol}
         self._m_jev = 0.5
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
+
+    def update_features(self, features: dict) -> None:
+        """Called from the tick loop (cheap: dict swap). Consumers read a snapshot."""
+        self.features = dict(features)
+
+    def slow_context(self, _now_ms: int = 0) -> tuple[float, float]:
+        st = self.brain.state
+        return (0.0, 0.0) if st is None else (st.vix_z, st.event_risk)
 
     def multipliers(self, _now_ms: int = 0) -> tuple[float, float]:
         return self.brain.multiplier(), self._m_jev
