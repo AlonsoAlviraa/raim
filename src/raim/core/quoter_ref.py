@@ -12,7 +12,12 @@ import math
 def quote(mid: float, sigma_bps: float, q: float, gamma: float, kappa: float,
           horizon_s: float, min_half_spread_bps: float, spread_mult: float,
           tick: float) -> tuple[float, float, float, float]:
-    """Returns (bid, ask, reservation_price, half_spread_bps)."""
+    """Returns (bid, ask, reservation_price, half_spread_bps); all NaN = no quote."""
+    ok = (gamma > 0.0 and kappa > 0.0 and mid > 0.0 and tick > 0.0 and horizon_s >= 0.0
+          and all(math.isfinite(x) for x in (mid, sigma_bps, q, gamma, kappa, horizon_s,
+                                              min_half_spread_bps, spread_mult)))
+    if not ok:
+        return math.nan, math.nan, math.nan, math.nan
     var_t = sigma_bps * sigma_bps * horizon_s
     shift = -q * gamma * var_t
     half = 0.5 * gamma * var_t + math.log(1.0 + gamma / kappa) / gamma
