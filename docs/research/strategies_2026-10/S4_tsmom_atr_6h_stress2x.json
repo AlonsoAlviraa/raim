@@ -1,0 +1,88 @@
+{
+  "name": "S4_tsmom_atr_6h_stress2x",
+  "metrics": {
+    "n_days": 1388,
+    "sr_daily": 0.023877938653456728,
+    "sharpe": 0.4561873774376694,
+    "ann_ret": 0.10738114486411776,
+    "ann_vol": 0.3868399025341055,
+    "max_dd": -0.628476787099878,
+    "cvar5": -0.046971244633577804,
+    "skew": 0.3867034159286027,
+    "kurt": 8.27556495749118,
+    "total_ret": 0.4738403270756437,
+    "pct_days_active": 0.9171469740634006,
+    "turnover_ann": 60.23551873198848,
+    "cost_ann": 0.05421196685878963,
+    "funding_ann": -0.03567368375792507,
+    "gross_ann": 0.2663571312419919,
+    "folds_positive": 3,
+    "n_folds": 4
+  },
+  "folds": [
+    {
+      "test_start": "2022-12-05",
+      "test_end": "2023-11-16",
+      "param": {
+        "L": 12,
+        "theta": 0.05,
+        "alpha": 2.5,
+        "short": true
+      },
+      "train_sr_daily": 0.08270128822567688,
+      "oos_sharpe": 1.4409250106315636,
+      "oos_total_ret": 0.6112633152435565
+    },
+    {
+      "test_start": "2023-11-20",
+      "test_end": "2024-10-31",
+      "param": {
+        "L": 12,
+        "theta": 0.05,
+        "alpha": 2.5,
+        "short": true
+      },
+      "train_sr_daily": 0.07305872329591359,
+      "oos_sharpe": 0.466598758220411,
+      "oos_total_ret": 0.10593215544828727
+    },
+    {
+      "test_start": "2024-11-04",
+      "test_end": "2025-10-16",
+      "param": {
+        "L": 12,
+        "theta": 0.05,
+        "alpha": 2.5,
+        "short": false
+      },
+      "train_sr_daily": 0.0729486480570338,
+      "oos_sharpe": 0.6972520841595481,
+      "oos_total_ret": 0.22332105099353372
+    },
+    {
+      "test_start": "2025-10-20",
+      "test_end": "2026-10-01",
+      "param": {
+        "L": 12,
+        "theta": 0.05,
+        "alpha": 2.5,
+        "short": false
+      },
+      "train_sr_daily": 0.0674679416786964,
+      "oos_sharpe": -1.231322283958287,
+      "oos_total_ret": -0.3238937020188074
+    }
+  ],
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "DOGEUSDT",
+    "ADAUSDT",
+    "LTCUSDT",
+    "LINKUSDT",
+    "AVAXUSDT"
+  ]
+}

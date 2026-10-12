@@ -1,0 +1,80 @@
+{
+  "name": "S3_donchian_ensemble",
+  "metrics": {
+    "n_days": 1373,
+    "sr_daily": 0.06130789862551,
+    "sharpe": 1.171285758627958,
+    "ann_ret": 0.1207127203744498,
+    "ann_vol": 0.10171569459696342,
+    "max_dd": -0.14643450820446802,
+    "cvar5": -0.01177960502684207,
+    "skew": 0.7086466772747277,
+    "kurt": 12.888001304646249,
+    "total_ret": 0.5352529248384077,
+    "pct_days_active": 0.922068463219228,
+    "turnover_ann": 10.103748382855436,
+    "cost_ann": 0.012124498059426525,
+    "funding_ann": 0.0,
+    "gross_ann": 0.1312626425698005,
+    "folds_positive": 3,
+    "n_folds": 4
+  },
+  "folds": [
+    {
+      "test_start": "2022-12-09",
+      "test_end": "2023-11-16",
+      "param": {
+        "lb": "short",
+        "tv": 0.25
+      },
+      "train_sr_daily": 0.033993205351698204,
+      "oos_sharpe": 2.0785967301328423,
+      "oos_total_ret": 0.20881391745033517
+    },
+    {
+      "test_start": "2023-11-24",
+      "test_end": "2024-10-31",
+      "param": {
+        "lb": "short",
+        "tv": 0.25
+      },
+      "train_sr_daily": 0.02057124139296977,
+      "oos_sharpe": 0.9054571847758027,
+      "oos_total_ret": 0.08429261001158062
+    },
+    {
+      "test_start": "2024-11-08",
+      "test_end": "2025-10-16",
+      "param": {
+        "lb": "short",
+        "tv": 0.25
+      },
+      "train_sr_daily": 0.05265794468140748,
+      "oos_sharpe": 1.7919333383046476,
+      "oos_total_ret": 0.21719517475009642
+    },
+    {
+      "test_start": "2025-10-24",
+      "test_end": "2026-10-02",
+      "param": {
+        "lb": "short",
+        "tv": 0.25
+      },
+      "train_sr_daily": 0.06164965671989359,
+      "oos_sharpe": -0.4560046164339307,
+      "oos_total_ret": -0.03769274059740335
+    }
+  ],
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "DOGEUSDT",
+    "ADAUSDT",
+    "LTCUSDT",
+    "LINKUSDT",
+    "AVAXUSDT"
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "name": "S1_basis_arb",
+  "metrics": {
+    "n_days": 1740,
+    "sr_daily": 0.03702016833767007,
+    "sharpe": 0.7072693230082454,
+    "ann_ret": 0.00037339377771505866,
+    "ann_vol": 0.0005280359916931671,
+    "max_dd": -0.001209246637079886,
+    "cvar5": -1.5816295338992627e-05,
+    "skew": -20.69298247943469,
+    "kurt": 731.9727548207545,
+    "total_ret": 0.0017812665065748412,
+    "pct_days_active": 0.02471264367816092,
+    "turnover_ann": 0.34961685823754785,
+    "cost_ann": 0.0003321360153256705,
+    "funding_ann": 0.0006511928639846742,
+    "gross_ann": 5.440680970980999e-05,
+    "folds_positive": 1,
+    "n_folds": 5
+  },
+  "folds": [
+    {
+      "test_start": "2021-12-19",
+      "test_end": "2022-12-01",
+      "param": {
+        "k": 1.0,
+        "short_spot": false
+      },
+      "train_sr_daily": 0.3905377738507785,
+      "oos_sharpe": -1.2842943047973938,
+      "oos_total_ret": -0.001209246637079886
+    },
+    {
+      "test_start": "2022-12-04",
+      "test_end": "2023-11-16",
+      "param": {
+        "k": 1.0,
+        "short_spot": false
+      },
+      "train_sr_daily": 0.2601714037065839,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0
+    },
+    {
+      "test_start": "2023-11-19",
+      "test_end": "2024-10-31",
+      "param": {
+        "k": 1.0,
+        "short_spot": false
+      },
+      "train_sr_daily": 0.20975152456748156,
+      "oos_sharpe": 5.008062956760064,
+      "oos_total_ret": 0.002994133789872455
+    },
+    {
+      "test_start": "2024-11-03",
+      "test_end": "2025-10-16",
+      "param": {
+        "k": 1.0,
+        "short_spot": false
+      },
+      "train_sr_daily": 0.18683403081253613,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0
+    },
+    {
+      "test_start": "2025-10-19",
+      "test_end": "2026-10-01",
+      "param": {
+        "k": 1.0,
+        "short_spot": false
+      },
+      "train_sr_daily": 0.16645479729707818,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0
+    }
+  ],
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "DOGEUSDT"
+  ],
+  "round_trip_cost": 0.0038000000000000004
+}

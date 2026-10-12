@@ -1,0 +1,591 @@
+{
+  "name": "S5_leadlag_1m",
+  "metrics": {
+    "n_days": 274,
+    "sr_daily": -0.03688640950614698,
+    "sharpe": -0.7047138641201386,
+    "ann_ret": -0.03663511815222409,
+    "ann_vol": 0.05111004467488614,
+    "max_dd": -0.06569941623605502,
+    "cvar5": -0.0067510483598966055,
+    "skew": -0.6657093609877218,
+    "kurt": 35.100531777348905,
+    "total_ret": -0.027628982438342775,
+    "pct_days_active": 0.13138686131386862,
+    "turnover_ann": 44.75912408759124,
+    "cost_ann": 0.08823941605839418,
+    "funding_ann": 0.0,
+    "gross_ann": 0.05222145898020223,
+    "folds_positive": 6,
+    "n_folds": 50
+  },
+  "folds": [
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2024-10",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.09795084900264345,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2024-11",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.08612650734914326,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2024-12",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.06267833842139031,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2025-01",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.052611391192175186,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2025-02",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.03701847327262399,
+      "oos_sharpe": 3.6105005588857457,
+      "oos_total_ret": 0.009526990969546567,
+      "turnover": 4.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2025-03",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.05293931614287531,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2025-04",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.0504086049005419,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2025-05",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.05096185191121866,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2025-06",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.0490537793579238,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "ETHUSDT",
+      "test_month": "2025-07",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.049167091344282404,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2024-10",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.05499110970478469,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2024-11",
+      "entry": 0.0024000000000000002,
+      "hold": 0.0,
+      "beta_btc": 0.04300426010416998,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2024-12",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.0537608829722041,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2025-01",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.05182361152642011,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2025-02",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.05106231923067552,
+      "oos_sharpe": 3.6105005588857457,
+      "oos_total_ret": 0.019444373597827136,
+      "turnover": 2.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2025-03",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.050275297709205795,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2025-04",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.05028691129501597,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2025-05",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.049273994795471954,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2025-06",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.05034498712949625,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "LTCUSDT",
+      "test_month": "2025-07",
+      "entry": 0.0012000000000000001,
+      "hold": 0.0,
+      "beta_btc": 0.04962051041371583,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2024-10",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3254051649362938,
+      "oos_sharpe": -3.4623714490318602,
+      "oos_total_ret": -0.004206362118836515,
+      "turnover": 8.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2024-11",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.33585437374260324,
+      "oos_sharpe": 2.1983645778829146,
+      "oos_total_ret": 0.04294635020385407,
+      "turnover": 24.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2024-12",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3229702428962122,
+      "oos_sharpe": -1.6815751804719166,
+      "oos_total_ret": -0.08644274063881607,
+      "turnover": 52.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2025-01",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.31319457566182757,
+      "oos_sharpe": -3.431354477227191,
+      "oos_total_ret": -0.0040000000000000036,
+      "turnover": 2.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2025-02",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.31365541888276194,
+      "oos_sharpe": -3.2480871737863923,
+      "oos_total_ret": -0.07203170339865739,
+      "turnover": 6.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2025-03",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3273168428394086,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2025-04",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3307297321154891,
+      "oos_sharpe": -3.4880749227427255,
+      "oos_total_ret": -0.006869440459110199,
+      "turnover": 2.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2025-05",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.33751595298730397,
+      "oos_sharpe": -4.935574191121996,
+      "oos_total_ret": -0.03859117510687249,
+      "turnover": 10.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2025-06",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.34250056056856304,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "PIVXUSDT",
+      "test_month": "2025-07",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.35175289925096775,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2024-10",
+      "entry": 0.002,
+      "hold": 0.0,
+      "beta_btc": 0.20472869018408063,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2024-11",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.21743264275547572,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2024-12",
+      "entry": 0.002,
+      "hold": 0.0,
+      "beta_btc": 0.2350252484838252,
+      "oos_sharpe": 4.483414154283335,
+      "oos_total_ret": 0.07997748210122224,
+      "turnover": 12.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2025-01",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.26261866533408984,
+      "oos_sharpe": -4.509015761122708,
+      "oos_total_ret": -0.039210136906583815,
+      "turnover": 6.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2025-02",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.2513297414796616,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2025-03",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.26387264645330966,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2025-04",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.2574890311632049,
+      "oos_sharpe": 3.488074922742725,
+      "oos_total_ret": 0.05440380549682944,
+      "turnover": 2.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2025-05",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.24588826893836024,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2025-06",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.25790173972470337,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "QKCUSDT",
+      "test_month": "2025-07",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.2653458950102136,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2024-10",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3606498260246202,
+      "oos_sharpe": -0.3146383577418102,
+      "oos_total_ret": -0.0004623806223762461,
+      "turnover": 6.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2024-11",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3348585877815159,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2024-12",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.322152389950065,
+      "oos_sharpe": 3.4313544772271936,
+      "oos_total_ret": 0.0024232506398094156,
+      "turnover": 2.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2025-01",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.32000662288189485,
+      "oos_sharpe": -3.4313544772271913,
+      "oos_total_ret": -0.0035537706381082446,
+      "turnover": 2.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2025-02",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.30301925100642363,
+      "oos_sharpe": -2.8011924547276155,
+      "oos_total_ret": -0.026740179479518122,
+      "turnover": 16.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2025-03",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3111054918585613,
+      "oos_sharpe": -6.028370511739302,
+      "oos_total_ret": -0.05105419119464716,
+      "turnover": 8.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2025-04",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3020988516830035,
+      "oos_sharpe": -3.488074922742725,
+      "oos_total_ret": -0.004893655049151624,
+      "turnover": 2.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2025-05",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.30043049623499024,
+      "oos_sharpe": -3.4313544772271927,
+      "oos_total_ret": -0.013914502865104872,
+      "turnover": 2.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2025-06",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3020255492778154,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    },
+    {
+      "alt": "GNOUSDT",
+      "test_month": "2025-07",
+      "entry": 0.004,
+      "hold": 0.0,
+      "beta_btc": 0.3040606662767163,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0,
+      "turnover": 0.0
+    }
+  ],
+  "per_alt": {
+    "ETHUSDT": {
+      "n_days": 274,
+      "sr_daily": 0.060412209333017705,
+      "sharpe": 1.1541736387221673,
+      "ann_ret": 0.012711099928234493,
+      "ann_vol": 0.0109958018333947,
+      "max_dd": 0.0,
+      "cvar5": 0.0,
+      "skew": 16.552945357246845,
+      "kurt": 277.00000000000006,
+      "total_ret": 0.009526990969546567,
+      "pct_days_active": 0.0036496350364963502
+    },
+    "LTCUSDT": {
+      "n_days": 274,
+      "sr_daily": 0.060412209333017705,
+      "sharpe": 1.1541736387221673,
+      "ann_ret": 0.025985452942314025,
+      "ann_vol": 0.0224421834280775,
+      "max_dd": 0.0,
+      "cvar5": 0.0,
+      "skew": 16.552945357246845,
+      "kurt": 277.0,
+      "total_ret": 0.019444373597827136,
+      "pct_days_active": 0.0036496350364963502
+    },
+    "PIVXUSDT": {
+      "n_days": 274,
+      "sr_daily": -0.050180186815674654,
+      "sharpe": -0.9586911230070105,
+      "ann_ret": -0.2106689584494914,
+      "ann_vol": 0.22084800474864677,
+      "max_dd": -0.28856440335288136,
+      "cvar5": -0.026065681387999223,
+      "skew": -1.9460399720758108,
+      "kurt": 57.4174454442489,
+      "total_ret": -0.16271363986931442,
+      "pct_days_active": 0.08029197080291971
+    },
+    "QKCUSDT": {
+      "n_days": 274,
+      "sr_daily": 0.0648905712663737,
+      "sharpe": 1.2397326233248271,
+      "ann_ret": 0.12724745568335738,
+      "ann_vol": 0.10059247319305223,
+      "max_dd": -0.039210136906583704,
+      "cvar5": -0.0031803514141022257,
+      "skew": 7.730526369254444,
+      "kurt": 88.6630650481762,
+      "total_ret": 0.09408251496923103,
+      "pct_days_active": 0.029197080291970802
+    },
+    "GNOUSDT": {
+      "n_days": 274,
+      "sr_daily": -0.1240618556782653,
+      "sharpe": -2.370198424717259,
+      "ann_ret": -0.12475278400780254,
+      "ann_vol": 0.055550528652239216,
+      "max_dd": -0.10428880329945911,
+      "cvar5": -0.008302180984674095,
+      "skew": -6.934706537685989,
+      "kurt": 65.35110505121271,
+      "total_ret": -0.09518786398525747,
+      "pct_days_active": 0.043795620437956206
+    }
+  }
+}

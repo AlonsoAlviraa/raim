@@ -1,0 +1,102 @@
+{
+  "name": "S6_pairs_coint",
+  "metrics": {
+    "n_days": 1388,
+    "sr_daily": -0.056504510080533345,
+    "sharpe": -1.0795171493292728,
+    "ann_ret": -0.10721521262770906,
+    "ann_vol": 0.1003867950582606,
+    "max_dd": -0.4288972133892587,
+    "cvar5": -0.012920325463818792,
+    "skew": 0.8347598087358715,
+    "kurt": 14.211468982025083,
+    "total_ret": -0.35031501574023993,
+    "pct_days_active": 0.9243515850144092,
+    "turnover_ann": 139.59856853863815,
+    "cost_ann": 0.0977189979770467,
+    "funding_ann": 0.005077947450495098,
+    "gross_ann": -0.015728216305043844,
+    "folds_positive": 1,
+    "n_folds": 4
+  },
+  "folds": [
+    {
+      "test_start": "2022-12-05",
+      "test_end": "2023-11-16",
+      "param": {
+        "W": 168,
+        "z": 2.0
+      },
+      "train_sr_daily": -0.02740517141866757,
+      "oos_sharpe": -0.3976907628007126,
+      "oos_total_ret": -0.03611420727809311
+    },
+    {
+      "test_start": "2023-11-20",
+      "test_end": "2024-10-31",
+      "param": {
+        "W": 168,
+        "z": 2.0
+      },
+      "train_sr_daily": -0.021549336593737013,
+      "oos_sharpe": -2.5055928344589065,
+      "oos_total_ret": -0.23031604531310956
+    },
+    {
+      "test_start": "2024-11-04",
+      "test_end": "2025-10-16",
+      "param": {
+        "W": 168,
+        "z": 2.0
+      },
+      "train_sr_daily": -0.04180584915826045,
+      "oos_sharpe": -1.1493385957897553,
+      "oos_total_ret": -0.14757199329359072
+    },
+    {
+      "test_start": "2025-10-20",
+      "test_end": "2026-10-01",
+      "param": {
+        "W": 720,
+        "z": 3.0
+      },
+      "train_sr_daily": -0.027548450843657403,
+      "oos_sharpe": 0.658471884132122,
+      "oos_total_ret": 0.027323226604692552
+    }
+  ],
+  "pairs": [
+    [
+      "ETHUSDT",
+      "BTCUSDT"
+    ],
+    [
+      "SOLUSDT",
+      "ETHUSDT"
+    ],
+    [
+      "BNBUSDT",
+      "BTCUSDT"
+    ],
+    [
+      "LTCUSDT",
+      "BTCUSDT"
+    ],
+    [
+      "LINKUSDT",
+      "ETHUSDT"
+    ],
+    [
+      "ADAUSDT",
+      "XRPUSDT"
+    ],
+    [
+      "AVAXUSDT",
+      "SOLUSDT"
+    ],
+    [
+      "DOGEUSDT",
+      "XRPUSDT"
+    ]
+  ]
+}
