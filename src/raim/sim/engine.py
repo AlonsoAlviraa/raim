@@ -14,6 +14,7 @@ import numpy as np
 from raim import core
 from raim.config import RaimConfig
 from raim.execution.guard import assert_not_live
+from raim.execution.unwind import Unwinder
 from raim.regime.blend import Hysteresis, blend_params, conservative_posterior
 from raim.regime.bocpd import BOCPD
 from raim.regime.hmm_fit import HMMParams, tilt_transition
@@ -38,6 +39,18 @@ class SimResult:
     n_msgs: int = 0
     n_rejects: int = 0
     n_books: int = 0
+    curve: list[tuple[int, float, float]] = field(default_factory=list)  # (ts, equity, position)
+    unwind_fills: int = 0
+
+
+def unwind_depth(position: float, bid_depth: float, ask_depth: float) -> float:
+    """RISK-3: depth relevant for UNWINDING the current inventory (side-aware).
+    Long sells into bids, short buys from asks, flat uses the worse side."""
+    if position > 0:
+        return bid_depth
+    if position < 0:
+        return ask_depth
+    return min(bid_depth, ask_depth)
 
 
 def make_governor(cfg: RaimConfig):
@@ -74,7 +87,8 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
             stale_inject: Callable[[int], bool] | None = None,
             slow_context: Callable[[int], tuple[float, float]] | None = None,
             on_features: Callable[[dict], None] | None = None,
-            features_every: int = 10) -> SimResult:
+            features_every: int = 10,
+            regime_model=None) -> SimResult:
     """All timing uses the RECEIVE clock (recv_ms, falling back to ts_ms): that is what the
     strategy can know. slow_context -> (vix_z, event_risk) tilts the HMM toward stress only.
     on_features receives a named feature dict every `features_every` books (for Jev/brain)."""
@@ -84,7 +98,12 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
     hmm = core.HMMFilter(*params.as_lists())
     gov = make_governor(cfg)
     ex = core.SimExchange(cfg.fees.maker_bps, cfg.fees.rebate_bps, s.ack_latency_ms,
-                          s.ack_jitter_ms, s.cancel_latency_ms, s.latency_stress, cfg.seed)
+                          s.ack_jitter_ms, s.cancel_latency_ms, s.latency_stress, cfg.seed,
+                          cfg.fees.taker_bps)
+    flow = core.FlowCPD(q.flow_hazard, 1.0, 1.0, 200, q.flow_short_run)
+    f_pc, f_bias = 0.0, 0.0
+    r_ = cfg.risk
+    unwinder = Unwinder(r_.unwind_passive_s, r_.unwind_clip, r_.unwind_max_slip_bps)
     cpd = BOCPD(hazard=cfg.regime.cpd_hazard, max_run=200)
     hyst = Hysteresis(cfg.regime.pull_on, cfg.regime.pull_off)
     res = SimResult()
@@ -110,6 +129,8 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
             cash -= side * qty * eff
             fees += fee
             res.fills.append((ts, side, px, qty, fee, regime))
+            if gov.halted:
+                res.unwind_fills += 1
             pending_marks.append((ts + 5000, side, px))
             if live.get(side) == _oid and not any(o[0] == _oid for o in ex.open_orders()):
                 live.pop(side, None)
@@ -119,10 +140,13 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
         now = ev.recv_ms or ev.ts_ms
         if isinstance(ev, Trade):
             fe.on_trade(now, ev.price, ev.qty, ev.sign)
+            f_pc, f_bias = flow.update(ev.sign)
             apply_fills(ex.on_trade(now, ev.price, ev.qty, ev.sign), 0.0)
             continue
         bid, bq, ask, aq = ev.best_bid, ev.bids[0][1], ev.best_ask, ev.asks[0][1]
-        depth = sum(x for _, x in ev.bids[:5]) + sum(x for _, x in ev.asks[:5])
+        bid_depth = sum(x for _, x in ev.bids[:5])
+        ask_depth = sum(x for _, x in ev.asks[:5])
+        depth = bid_depth + ask_depth
         if stale_inject is None or not stale_inject(now):
             last_feed = now
             apply_fills(ex.on_book_l2(now, [p_ for p_, _ in ev.bids], [x for _, x in ev.bids],
@@ -142,7 +166,10 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
             if ctx != last_ctx:
                 hmm.set_transition(tilt_transition(params.trans, ctx[0], ctx[1]).tolist())
                 last_ctx = ctx
-        post = np.asarray(hmm.step(scaler.apply(obs_from_features(v))))
+        obs_z = scaler.apply(obs_from_features(v))
+        post = np.asarray(hmm.step(obs_z))
+        if regime_model is not None:      # e.g. continuous stress-index baseline
+            post = np.asarray(regime_model.posterior(obs_z))
         r_alarm = cpd.update(scaler.apply(obs_from_features(v))[1]) > cfg.regime.cpd_alarm
         p = conservative_posterior(post, cfg.regime.conservative_bias, r_alarm)
         regime = int(np.argmax(post))
@@ -163,6 +190,7 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
         equity = cash + pos * mid - fees
         peak = max(peak, equity)
         res.max_drawdown = max(res.max_drawdown, peak - equity)
+        res.curve.append((now, equity, pos))
         while msg_times and msg_times[0] < now - 1000:
             msg_times.popleft()
         if now - rej_mark[0] >= 10_000:  # rolling 10s reject-rate window
@@ -170,17 +198,41 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
         d_msgs = ex.n_msgs - rej_mark[2]
         rej_rate = (ex.n_rejects - rej_mark[1]) / d_msgs if d_msgs >= 10 else 0.0
         sigma_frac_s = max(v[5], 1e-7) * math.sqrt(1000.0 / max(dt_ewma, 1.0))
-        d = gov.evaluate(now, last_feed, equity, pos, mid, sigma_frac_s, depth, rej_rate,
-                         float(len(msg_times)))
+        d = gov.evaluate(now, last_feed, equity, pos, mid, sigma_frac_s,
+                         unwind_depth(pos, bid_depth, ask_depth), rej_rate, float(len(msg_times)))
         res.reasons[d.reason] = res.reasons.get(d.reason, 0) + 1
+        if d.halted:   # RISK-2: deterministic reduce-only unwind (sim only)
+            act = unwinder.plan(now, pos, bid, ask)
+            keep = act.side if act.kind == "passive" else 0
+            for side in (1, -1):
+                oid = live.get(side)
+                if oid is not None and (side != keep or abs(live_px[side] - act.price) > 1e-9):
+                    ex.cancel(now, oid)
+                    live.pop(side)
+            if act.kind == "passive" and act.side not in live:
+                live[act.side] = ex.place(now, act.side, act.price, act.qty)
+                live_px[act.side] = act.price
+            elif act.kind == "aggressive":
+                apply_fills(ex.take(now, act.side, act.qty, act.limit), mid)
+            continue
         want: dict[int, float] = {}
         size = 0.0
+        side_mult = {1: 1.0, -1: 1.0}
         if not d.cancel_all:
             size = q.order_size * d.size_mult * z_mult
             qnorm = pos / q.order_size
+            horizon = q.horizon_s * (1.0 - 0.5 * f_pc)   # shorter horizon after a flow change
             b, a, _, _ = core.quote(v[1], sigma_frac_s * 1e4, qnorm, q.gamma * g_mult, q.kappa,
-                                    q.horizon_s, q.min_half_spread_bps, s_mult * d.spread_mult,
+                                    horizon, q.min_half_spread_bps, s_mult * d.spread_mult,
                                     q.tick_size)
+            qb_ = ex.queue_ahead(live[1]) if 1 in live else 0.0
+            qa_ = ex.queue_ahead(live[-1]) if -1 in live else 0.0
+            be, ae, bm, am = core.exposure_adjust(qb_ if qb_ == qb_ else 0.0, qa_ if qa_ == qa_ else 0.0,
+                                                  f_bias, f_pc, q.k_flow_bps, q.k_queue_bps,
+                                                  q.max_extra_bps)
+            b = math.floor(b * (1 - be * 1e-4) / q.tick_size + 1e-9) * q.tick_size
+            a = math.ceil(a * (1 + ae * 1e-4) / q.tick_size - 1e-9) * q.tick_size
+            side_mult = {1: bm, -1: am}
             if not (math.isfinite(b) and math.isfinite(a)):
                 b = a = math.nan
                 want_ok = False
@@ -198,6 +250,7 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
                 elif pos < 0 and d.allow_bid:
                     want[1] = b
                 size = reduce_size
+                side_mult = {1: 1.0, -1: 1.0}   # reducing inventory is never shrunk
             else:
                 if d.allow_bid and (size > 0 or pos < 0):
                     want[1] = b
@@ -212,9 +265,12 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
                 ex.cancel(now, oid)
                 msg_times.append(now)
                 live.pop(side)
-            if target is not None and side not in live and size > 0:
+            sz = size * side_mult[side]
+            if (pos > 0 and side == -1) or (pos < 0 and side == 1):
+                sz = max(sz, min(size, abs(pos)))      # exposure skew never blocks de-risking
+            if target is not None and side not in live and sz > 1e-12:
                 if len(msg_times) < cfg.risk.max_msgs_per_s:
-                    live[side] = ex.place(now, side, target, size)
+                    live[side] = ex.place(now, side, target, sz)
                     live_px[side] = target
                     msg_times.append(now)
     mid_last = res.mids[-1][1] if res.mids else 0.0

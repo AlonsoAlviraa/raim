@@ -54,6 +54,11 @@ class QuotingCfg:
     min_half_spread_bps: float = 0.5
     order_size: float = 0.001
     tick_size: float = 0.01
+    flow_hazard: float = 0.01        # FlowCPD (Moret & Lillo 2026)
+    flow_short_run: int = 30
+    k_flow_bps: float = 2.0          # exposure asymmetry: flow-bias widening
+    k_queue_bps: float = 1.0         # exposure asymmetry: queue-imbalance widening
+    max_extra_bps: float = 5.0
     regime_params: dict = field(default_factory=lambda: {
         "R1": [1.0, 1.0, 1.0], "R2": [2.0, 1.6, 0.6],
         "R3": [3.0, 2.5, 0.4], "R4": [6.0, 5.0, 0.0]})
@@ -73,6 +78,9 @@ class RiskCfg:
     loss_streak_widen: int = 3
     loss_streak_pause: int = 6
     pause_s: float = 60.0
+    unwind_passive_s: float = 5.0    # RISK-2 post-halt unwind
+    unwind_clip: float = 0.01
+    unwind_max_slip_bps: float = 10.0
 
 
 @dataclass(frozen=True)
@@ -92,7 +100,7 @@ class SlowBrainCfg:
     min_call_spacing_s: float = 1.0
     tau_s: float = 600.0
     mcp_command: list = field(default_factory=lambda: [
-        "uvx", "--from", "tradingview-mcp-server", "tradingview-mcp"])
+        "uvx", "--from", "tradingview-mcp-server==0.8.1", "tradingview-mcp"])
 
 
 @dataclass(frozen=True)
@@ -101,6 +109,8 @@ class JevCfg:
     model: str = "jev-latest"
     timeout_ms: int = 500
     min_confidence: float = 0.6
+    max_ece: float = 0.05            # calibration gate before Jev is used
+    min_calibration_n: int = 500
 
 
 @dataclass(frozen=True)

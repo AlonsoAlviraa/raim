@@ -31,6 +31,11 @@ quoting:
   min_half_spread_bps: 0.5
   order_size: 0.001
   tick_size: 0.01
+  flow_hazard: 0.01
+  flow_short_run: 30
+  k_flow_bps: 2.0
+  k_queue_bps: 1.0
+  max_extra_bps: 5.0
   regime_params:            # per-regime theta_k: [gamma_mult, spread_mult, size_mult]
     R1: [1.0, 1.0, 1.0]
     R2: [2.0, 1.6, 0.6]
@@ -49,6 +54,9 @@ risk:
   loss_streak_widen: 3
   loss_streak_pause: 6
   pause_s: 60.0
+  unwind_passive_s: 5.0
+  unwind_clip: 0.01
+  unwind_max_slip_bps: 10.0
 sim:
   ack_latency_ms: 30.0
   ack_jitter_ms: 10.0
@@ -61,11 +69,13 @@ slow_brain:
   poll_interval_s: 60.0
   min_call_spacing_s: 1.0
   tau_s: 600.0
-  mcp_command: ["uvx", "--from", "tradingview-mcp-server", "tradingview-mcp"]
+  mcp_command: ["uvx", "--from", "tradingview-mcp-server==0.8.1", "tradingview-mcp"]   # pinned; never npm
 jev:
   provider: mock            # mock | http
   model: jev-latest
   timeout_ms: 500
   min_confidence: 0.6
+  max_ece: 0.05
+  min_calibration_n: 500
 audit:
   dir: logs
