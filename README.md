@@ -89,7 +89,12 @@ uv run raim walkforward --data data/btcusdt.jsonl --folds 4
 uv run raim sim                                            # SINTÉTICO (solo para probar el código)
 uv run raim paper --warmup 120 --seconds 600               # feed público en vivo + ejecutor PAPER
 uv run raim bench
+uv run raim stress --seeds 3                                # batería de estrés: CVaR10/30, sesgo de inventario
+uv run raim compare-regimes --data data/btcusdt.jsonl      # HMM vs dial de estrés continuo (walk-forward)
 ```
+Ver `docs/research/phase3_changes.md` (FlowCPD, asimetría de exposición, unwind tras halt,
+ablación LLM/Jev con costes, registro de pruebas + Deflated Sharpe, calibración de Jev).
+
 Todo deja un log de auditoría append-only en `logs/audit_<run_id>.jsonl` (run id estilo git +
 hash de la config). Config en `configs/default.yaml` (semilla incluida → reproducible).
 
@@ -113,8 +118,13 @@ Solo el paquete oficial: PyPI `tradingview-mcp-server` (repo
 `github.com/atilaahmettaner/tradingview-mcp`). **Nunca** instales clones de npm (hay malware).
 ```powershell
 uv sync --extra mcp
-uvx --from tradingview-mcp-server tradingview-mcp      # si hace timeout: uv tool install --python 3.13 tradingview-mcp-server
+uvx --from tradingview-mcp-server==0.8.1 tradingview-mcp   # si hace timeout: uv tool install --python 3.13 tradingview-mcp-server==0.8.1
 ```
+**Cuidado con los homónimos**: hay al menos tres proyectos llamados "tradingview-mcp" (este de
+atilaahmettaner en Python/PyPI, uno en JS para TradingView Desktop y un MCP "oficial" de
+TradingView en beta). RAIM solo acepta `uvx --from tradingview-mcp-server==0.8.1 tradingview-mcp`
+(`validate_mcp_command`) y rechaza npm/npx/node.
+
 Es una capa de **análisis polled** (caché 60 s, TA ≤4 concurrentes, ≥0.8 s entre llamadas,
 backtests diarios/horarios, sin order book ni órdenes). Nunca entra en el bucle de ticks.
 

@@ -8,3 +8,7 @@
 | BRAIN-3 | Media | Ninguna herramienta del MCP está mapeada todavía a campos del SlowState (vix_z vía `market_snapshot`, event_risk vía `financial_news`, etc.). | Abierto. |
 | BRAIN-4 | Media | Proveedor Anthropic (`claude-opus-5-5`) no probado contra la API real (sin clave). | Abierto. |
 | BRAIN-5 | Info | Decaimiento de confianza verificado: nunca sube m por encima del último valor; sin estado ⇒ 0.5. | OK. |
+
+## Fase 3
+- BRAIN-6 (nuevo, **arreglado**): la versión del paquete MCP no estaba fijada. Ahora `tradingview-mcp-server==0.8.1` y `validate_mcp_command` rechazan npm/npx/node y versiones sin fijar. Hay un test que escanea el repo en busca de instalaciones npm.
+- La ablación con costes (`research/ablation.py`) permite medir si `m_llm` aporta valor neto. Sigue sin ejecutarse con proveedores reales.

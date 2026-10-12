@@ -5,10 +5,12 @@ flowchart LR
   subgraph FAST["FAST BODY — determinista, sin LLM (C++ raim_core o Python ref)"]
     WS["Binance WS público<br/>depth20@100ms + trade"] --> REC["recorder / replay<br/>(JSONL, reloj de recepción)"]
     REC --> FE["FeatureEngine<br/>microprice, OFI, BV vol, VPIN, VR, Hawkes n"]
-    FE --> HMM["HMMFilter 4 estados<br/>+ BOCPD (alarma)"]
+    FE --> HMM["HMMFilter 4 estados<br/>+ BOCPD (alarma)<br/>| baseline: StressIndex PC1"]
+    FE --> FC["FlowCPD (signo del flujo)<br/>p_change, flow_bias"]
+    FC --> Q
     HMM --> BL["blend θ=Σp·θ_k<br/>sesgo R3/R4 + histéresis"]
     BL --> Q["quote() AS/GLFT<br/>skew inventario, post-only"]
-    Q --> GOV["RiskGovernor<br/>límites duros, m=min(m_llm,m_rules,m_jev)"]
+    Q --> EXP["exposure_adjust<br/>flujo + cola (solo ensancha)"] --> GOV["RiskGovernor<br/>límites duros, m=min(m_llm,m_rules,m_jev)"]
     GOV --> OMS["paper OMS"] --> SIM["SimExchange L2<br/>cola, parciales, latencia, fees"]
     SIM -->|fills| GOV
   end
@@ -22,6 +24,8 @@ flowchart LR
   SS -. "m_llm (decae a ≤0.5)" .-> GOV
   SS -. "vix_z, event_risk (solo inclina a estrés)" .-> HMM
   MJ -. "m_jev (fallback 0.5)" .-> GOV
+  UNW["Unwinder tras halt<br/>pasivo→taker, solo reduce (sim)"] --> SIM
+  GOV -->|halt| UNW
   GUARD["execution/guard.py<br/>live ⇒ hard-fail"] -.-> OMS
   RES["research: walk-forward purgado+embargado,<br/>markouts 1/5/30 s, atribución, gate"] --- SIM
   AUD["audit JSONL append-only<br/>run_id + hash config"] --- GOV
