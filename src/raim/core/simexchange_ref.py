@@ -2,7 +2,9 @@
 ack/cancel latency with jitter (latency stress multiplier), post-only rejects, fees/rebates.
 
 Conservative assumptions (documented):
-- On activation we join the BACK of the visible queue at our price.
+- On activation we join the BACK of the visible L2 queue at our price. A price level inside
+  the visible range but absent from the book is empty (queue 0). A price BEYOND the deepest
+  visible level has unknown queue and is treated as infinite (only trade-throughs fill it).
 - Visible-queue decreases are assumed to come from orders BEHIND us unless the level
   shrinks below our queue_ahead (queue_ahead = min(queue_ahead, level_qty)).
 - A fill only happens from an aggressive trade at/through our price, or the opposite
@@ -17,6 +19,7 @@ from raim.core.rng import SplitMix64
 
 BID, ASK = 1, -1
 PENDING, ACTIVE, DONE = 0, 1, 2
+UNKNOWN_QUEUE = 1e300
 
 
 @dataclass
@@ -48,6 +51,21 @@ class SimExchange:
         self.aq = 0.0
         self.n_msgs = 0
         self.n_rejects = 0
+        self.bpx: list[float] = []
+        self.bqs: list[float] = []
+        self.apx: list[float] = []
+        self.aqs: list[float] = []
+
+    def level_qty(self, side: int, price: float) -> float:
+        px, qs = (self.bpx, self.bqs) if side == BID else (self.apx, self.aqs)
+        if not px:
+            return UNKNOWN_QUEUE
+        for p, q in zip(px, qs):
+            if p == price:
+                return q
+        better = price > px[0] if side == BID else price < px[0]
+        within = price > px[-1] if side == BID else price < px[-1]
+        return 0.0 if (better or within) else UNKNOWN_QUEUE
 
     def _lat(self, base: float) -> int:
         return int(round(self.stress * (base + self.jit * self.rng.uniform())))
@@ -87,10 +105,7 @@ class SimExchange:
                     del self.orders[o.oid]
                     continue
                 o.state = ACTIVE
-                if o.side == BID:
-                    o.queue_ahead = self.bq if o.price == self.bid else 0.0
-                else:
-                    o.queue_ahead = self.aq if o.price == self.ask else 0.0
+                o.queue_ahead = self.level_qty(o.side, o.price)
 
     def _fill(self, o: _Order, qty: float, ts: int, out: list) -> float:
         q = qty if qty < o.qty else o.qty
@@ -103,26 +118,24 @@ class SimExchange:
         return q
 
     def on_book(self, now_ms: int, bid: float, bq: float, ask: float, aq: float) -> list:
+        """Top-of-book only (levels behind the touch are unknown -> conservative)."""
+        return self.on_book_l2(now_ms, [bid], [bq], [ask], [aq])
+
+    def on_book_l2(self, now_ms: int, bid_px: list[float], bid_qty: list[float],
+                   ask_px: list[float], ask_qty: list[float]) -> list:
+        self.bpx, self.bqs, self.apx, self.aqs = list(bid_px), list(bid_qty), list(ask_px), list(ask_qty)
+        bid, bq, ask, aq = bid_px[0], bid_qty[0], ask_px[0], ask_qty[0]
         self.bid, self.bq, self.ask, self.aq = bid, bq, ask, aq
         self._housekeep(now_ms)
         out: list = []
         for o in self.orders.values():
             if o.state != ACTIVE:
                 continue
-            if o.side == BID:
-                if ask <= o.price:            # opposite side moved through us
-                    self._fill(o, o.qty, now_ms, out)
-                elif bid == o.price:
-                    o.queue_ahead = min(o.queue_ahead, bq)
-                elif bid < o.price:
-                    o.queue_ahead = 0.0
+            through = (o.side == BID and ask <= o.price) or (o.side == ASK and bid >= o.price)
+            if through:                       # opposite side moved through us
+                self._fill(o, o.qty, now_ms, out)
             else:
-                if bid >= o.price:
-                    self._fill(o, o.qty, now_ms, out)
-                elif ask == o.price:
-                    o.queue_ahead = min(o.queue_ahead, aq)
-                elif ask > o.price:
-                    o.queue_ahead = 0.0
+                o.queue_ahead = min(o.queue_ahead, self.level_qty(o.side, o.price))
         return out
 
     def on_trade(self, now_ms: int, price: float, qty: float, sign: int) -> list:

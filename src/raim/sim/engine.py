@@ -16,7 +16,8 @@ from raim.config import RaimConfig
 from raim.execution.guard import assert_not_live
 from raim.regime.blend import Hysteresis, blend_params, conservative_posterior
 from raim.regime.bocpd import BOCPD
-from raim.regime.hmm_fit import HMMParams
+from raim.regime.hmm_fit import HMMParams, tilt_transition
+from raim.core import FEATURE_NAMES
 from raim.research.obs import Standardizer, obs_from_features
 from raim.types import BookSnapshot, Trade
 
@@ -70,7 +71,13 @@ def feature_rows(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig) -> tup
 def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMMParams,
             scaler: Standardizer,
             ext_multipliers: Callable[[int], tuple[float, float]] | None = None,
-            stale_inject: Callable[[int], bool] | None = None) -> SimResult:
+            stale_inject: Callable[[int], bool] | None = None,
+            slow_context: Callable[[int], tuple[float, float]] | None = None,
+            on_features: Callable[[dict], None] | None = None,
+            features_every: int = 10) -> SimResult:
+    """All timing uses the RECEIVE clock (recv_ms, falling back to ts_ms): that is what the
+    strategy can know. slow_context -> (vix_z, event_risk) tilts the HMM toward stress only.
+    on_features receives a named feature dict every `features_every` books (for Jev/brain)."""
     assert_not_live(cfg.mode)
     q, s = cfg.quoting, cfg.sim
     fe = make_features(cfg)
@@ -107,17 +114,19 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
             if live.get(side) == _oid and not any(o[0] == _oid for o in ex.open_orders()):
                 live.pop(side, None)
 
+    last_ctx: tuple[float, float] | None = None
     for ev in events:
+        now = ev.recv_ms or ev.ts_ms
         if isinstance(ev, Trade):
-            fe.on_trade(ev.ts_ms, ev.price, ev.qty, ev.sign)
-            apply_fills(ex.on_trade(ev.ts_ms, ev.price, ev.qty, ev.sign), 0.0)
+            fe.on_trade(now, ev.price, ev.qty, ev.sign)
+            apply_fills(ex.on_trade(now, ev.price, ev.qty, ev.sign), 0.0)
             continue
-        now = ev.ts_ms
         bid, bq, ask, aq = ev.best_bid, ev.bids[0][1], ev.best_ask, ev.asks[0][1]
         depth = sum(x for _, x in ev.bids[:5]) + sum(x for _, x in ev.asks[:5])
         if stale_inject is None or not stale_inject(now):
             last_feed = now
-            apply_fills(ex.on_book(now, bid, bq, ask, aq), ev.mid)
+            apply_fills(ex.on_book_l2(now, [p_ for p_, _ in ev.bids], [x for _, x in ev.bids],
+                                      [p_ for p_, _ in ev.asks], [x for _, x in ev.asks]), ev.mid)
             fe.on_book(now, bid, bq, ask, aq, depth)
         if last_ts is not None and now > last_ts:
             dt_ewma = 0.98 * dt_ewma + 0.02 * (now - last_ts)
@@ -128,12 +137,22 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
             continue
         res.n_books += 1
         res.mids.append((now, mid))
+        if slow_context is not None:
+            ctx = slow_context(now)
+            if ctx != last_ctx:
+                hmm.set_transition(tilt_transition(params.trans, ctx[0], ctx[1]).tolist())
+                last_ctx = ctx
         post = np.asarray(hmm.step(scaler.apply(obs_from_features(v))))
         r_alarm = cpd.update(scaler.apply(obs_from_features(v))[1]) > cfg.regime.cpd_alarm
         p = conservative_posterior(post, cfg.regime.conservative_bias, r_alarm)
         regime = int(np.argmax(post))
         res.regimes.append(regime)
         pulled = hyst.update(float(p[3]))
+        if on_features is not None and res.n_books % features_every == 0:
+            fd = dict(zip(FEATURE_NAMES, v))
+            fd["p_regime"] = [float(x) for x in post]
+            fd["position"] = pos
+            on_features(fd)
         g_mult, s_mult, z_mult = blend_params(p, q.regime_params)
         # matured markouts -> loss-streak logic (causal: only past fills, current mid)
         while pending_marks and pending_marks[0][0] <= now:
@@ -162,11 +181,18 @@ def run_sim(events: Iterable[BookSnapshot | Trade], cfg: RaimConfig, params: HMM
             b, a, _, _ = core.quote(v[1], sigma_frac_s * 1e4, qnorm, q.gamma * g_mult, q.kappa,
                                     q.horizon_s, q.min_half_spread_bps, s_mult * d.spread_mult,
                                     q.tick_size)
+            if not (math.isfinite(b) and math.isfinite(a)):
+                b = a = math.nan
+                want_ok = False
+            else:
+                want_ok = True
             # post-only discipline: never cross the current touch
             b = min(b, ask - q.tick_size)
             a = max(a, bid + q.tick_size)
             reduce_size = min(q.order_size, abs(pos))
-            if pulled:  # R4: pull quotes, allow only inventory-reducing passive order
+            if not want_ok:
+                pass
+            elif pulled:  # R4: pull quotes, allow only inventory-reducing passive order
                 if pos > 0 and d.allow_ask:
                     want[-1] = a
                 elif pos < 0 and d.allow_bid:
