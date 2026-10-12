@@ -157,6 +157,10 @@ class HMMFilter {
 
 inline std::tuple<double, double, double, double> quote(double mid, double sigma_bps, double q, double gamma,
     double kappa, double horizon_s, double min_half, double spread_mult, double tick) {
+  bool ok = gamma > 0 && kappa > 0 && mid > 0 && tick > 0 && horizon_s >= 0 && std::isfinite(mid) &&
+            std::isfinite(sigma_bps) && std::isfinite(q) && std::isfinite(gamma) && std::isfinite(kappa) &&
+            std::isfinite(horizon_s) && std::isfinite(min_half) && std::isfinite(spread_mult);
+  if (!ok) return {nan(), nan(), nan(), nan()};
   double var_t = sigma_bps * sigma_bps * horizon_s;
   double shift = -q * gamma * var_t;
   double half = 0.5 * gamma * var_t + std::log(1.0 + gamma / kappa) / gamma;
@@ -193,10 +197,12 @@ class RiskGovernor {
   }
   Decision evaluate(int64_t now, int64_t last_feed, double equity, double pos, double mid, double sigma,
                     double depth, double rej, double msg) {
-    if (equity > peak_) peak_ = equity;
-    if (peak_ - equity >= max_dd_) halted_ = true;
+    bool finite = std::isfinite(equity) && std::isfinite(pos);
+    if (finite && equity > peak_) peak_ = equity;
+    if (finite && peak_ - equity >= max_dd_) halted_ = true;
     double qm = qmax(sigma, mid, depth);
     if (halted_) return {false, false, true, true, 0.0, 1.0, qm, "drawdown_halt"};
+    if (!finite) return {false, false, true, false, 0.0, 1.0, qm, "bad_input"};
     if (now - last_feed > stale_ms_ || !(mid > 0)) return {false, false, true, false, 0.0, 1.0, qm, "stale_feed"};
     if (now < pause_until_) return {false, false, true, false, 0.0, 1.0, qm, "loss_streak_pause"};
     double m_rules = 1.0, sm = 1.0; std::string reason = "ok";
@@ -222,6 +228,7 @@ class RiskGovernor {
   bool halted_ = false; int loss_streak_ = 0; int64_t pause_until_ = -1;
 };
 
+constexpr double kUnknownQueue = 1e300;
 using Fill = std::tuple<int64_t, int, double, double, double, int64_t>;  // id, side, px, qty, fee, ts
 
 class SimExchange {
@@ -243,19 +250,26 @@ class SimExchange {
     return v;
   }
   std::vector<Fill> on_book(int64_t now, double bid, double bq, double ask, double aq) {
-    bid_ = bid; bq_ = bq; ask_ = ask; aq_ = aq; housekeep(now);
+    return on_book_l2(now, {bid}, {bq}, {ask}, {aq});
+  }
+  double level_qty(int side, double price) const {
+    const auto& px = side == 1 ? bpx_ : apx_; const auto& qs = side == 1 ? bqs_ : aqs_;
+    if (px.empty()) return kUnknownQueue;
+    for (size_t i = 0; i < px.size(); ++i) if (px[i] == price) return qs[i];
+    bool better = side == 1 ? price > px.front() : price < px.front();
+    bool within = side == 1 ? price > px.back() : price < px.back();
+    return (better || within) ? 0.0 : kUnknownQueue;
+  }
+  std::vector<Fill> on_book_l2(int64_t now, std::vector<double> bpx, std::vector<double> bqs,
+                               std::vector<double> apx, std::vector<double> aqs) {
+    bpx_ = std::move(bpx); bqs_ = std::move(bqs); apx_ = std::move(apx); aqs_ = std::move(aqs);
+    bid_ = bpx_[0]; bq_ = bqs_[0]; ask_ = apx_[0]; aq_ = aqs_[0]; housekeep(now);
     std::vector<Fill> out;
     for (auto& kv : orders_) {
       Order& o = kv.second; if (o.state != 1) continue;
-      if (o.side == 1) {
-        if (ask <= o.price) fill(o, o.qty, now, out);
-        else if (bid == o.price) o.qa = std::min(o.qa, bq);
-        else if (bid < o.price) o.qa = 0.0;
-      } else {
-        if (bid >= o.price) fill(o, o.qty, now, out);
-        else if (ask == o.price) o.qa = std::min(o.qa, aq);
-        else if (ask > o.price) o.qa = 0.0;
-      }
+      bool through = (o.side == 1 && ask_ <= o.price) || (o.side == -1 && bid_ >= o.price);
+      if (through) fill(o, o.qty, now, out);
+      else o.qa = std::min(o.qa, level_qty(o.side, o.price));
     }
     return out;
   }
@@ -289,7 +303,7 @@ class SimExchange {
         bool crosses = (o.side == 1 && ask_ > 0 && o.price >= ask_) || (o.side == -1 && bid_ > 0 && o.price <= bid_);
         if (crosses) { ++n_rejects; it = orders_.erase(it); continue; }
         o.state = 1;
-        o.qa = o.side == 1 ? (o.price == bid_ ? bq_ : 0.0) : (o.price == ask_ ? aq_ : 0.0);
+        o.qa = level_qty(o.side, o.price);
       }
       ++it;
     }
@@ -302,6 +316,7 @@ class SimExchange {
   double fee_, ack_, jit_, cxl_, stress_; SplitMix64 rng_;
   std::map<int64_t, Order> orders_; int64_t next_id_ = 1;
   double bid_ = 0, bq_ = 0, ask_ = 0, aq_ = 0;
+  std::vector<double> bpx_, bqs_, apx_, aqs_;
 };
 
 }  // namespace raim

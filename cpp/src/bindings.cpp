@@ -35,6 +35,6 @@ PYBIND11_MODULE(raim_core, m) {
       .def(py::init<double, double, double, double, double, double, uint64_t>())
       .def("place", &SimExchange::place).def("cancel", &SimExchange::cancel)
       .def("open_orders", &SimExchange::open_orders).def("on_book", &SimExchange::on_book)
-      .def("on_trade", &SimExchange::on_trade)
+      .def("on_trade", &SimExchange::on_trade).def("on_book_l2", &SimExchange::on_book_l2)
       .def_readonly("n_msgs", &SimExchange::n_msgs).def_readonly("n_rejects", &SimExchange::n_rejects);
 }
