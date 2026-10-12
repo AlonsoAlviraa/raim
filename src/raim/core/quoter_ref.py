@@ -26,3 +26,31 @@ def quote(mid: float, sigma_bps: float, q: float, gamma: float, kappa: float,
     bid = math.floor(res * (1.0 - half * 1e-4) / tick + 1e-9) * tick
     ask = math.ceil(res * (1.0 + half * 1e-4) / tick - 1e-9) * tick
     return bid, ask, res, half
+
+
+def exposure_adjust(qa_bid: float, qa_ask: float, flow_bias: float, p_change: float,
+                    k_flow_bps: float, k_queue_bps: float, max_extra_bps: float
+                    ) -> tuple[float, float, float, float]:
+    """Queue-adjusted exposure asymmetry (Moret & Lillo, arXiv:2609.11614).
+
+    Returns (bid_extra_bps, ask_extra_bps, bid_size_mult, ask_size_mult). It can only WIDEN
+    a side (extra >= 0) and SHRINK its size (mult <= 1):
+    - persistent buy flow (flow_bias > 0) exposes our ASK, amplified by a recent change point;
+    - the side with the SHORTER queue ahead of us fills first, so it is the more exposed side.
+    Any NaN input -> maximal widening and zero size on both sides (conservative)."""
+    vals = (qa_bid, qa_ask, flow_bias, p_change)
+    if any(v != v for v in vals) or max_extra_bps <= 0.0:
+        return max_extra_bps, max_extra_bps, 0.0, 0.0
+    cap = 1e12
+    qb = min(max(qa_bid, 0.0), cap)
+    qa = min(max(qa_ask, 0.0), cap)
+    tot = qb + qa
+    imb = (qb - qa) / tot if tot > 0.0 else 0.0
+    fb = min(max(flow_bias, -1.0), 1.0)
+    pc = min(max(p_change, 0.0), 1.0)
+    amp = 1.0 + pc
+    ask_x = k_flow_bps * max(fb, 0.0) * amp + k_queue_bps * max(imb, 0.0)
+    bid_x = k_flow_bps * max(-fb, 0.0) * amp + k_queue_bps * max(-imb, 0.0)
+    bid_x = min(max(bid_x, 0.0), max_extra_bps)
+    ask_x = min(max(ask_x, 0.0), max_extra_bps)
+    return bid_x, ask_x, 1.0 - bid_x / max_extra_bps, 1.0 - ask_x / max_extra_bps
