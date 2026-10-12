@@ -1,0 +1,13 @@
+[build-system]
+requires = ["scikit-build-core>=0.8", "pybind11>=2.11"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "raim-core"
+version = "0.1.0"
+description = "Optional C++17 hot path for RAIM (pybind11). RAIM falls back to pure Python if absent."
+requires-python = ">=3.10,<3.14"
+
+[tool.scikit-build]
+cmake.version = ">=3.15"
+wheel.packages = []
