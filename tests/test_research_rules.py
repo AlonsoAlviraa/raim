@@ -152,3 +152,20 @@ def test_capacity_and_paper_gate_and_kill_switch():
     assert not any(ks.update(x) for x in oos.iloc[:50])
     ks2 = KillSwitch.from_backtest(oos.values, dd_p99=-0.2)
     assert any(ks2.update(-0.01) for _ in range(40)) and ks2.reason
+
+
+def test_aggressive_profile_only_loosens_drawdown(tmp_path):
+    from raim.research.verdict import AGGRESSIVE_PATH
+    base, s0 = load_rules()
+    agg, s1 = load_rules(AGGRESSIVE_PATH)
+    assert s0 != s1 and agg["profile"] == "aggressive_user_dd70"
+    assert agg["r12_regime"]["worst_regime_min_dd"] == -0.70
+    assert agg["r13_bootstrap"]["min_p95_dd"] == -0.70
+    for sec in base:
+        for k, v in (base[sec].items() if isinstance(base[sec], dict) else []):
+            if (sec, k) not in {("r12_regime", "worst_regime_min_dd"), ("r13_bootstrap", "min_p95_dd")}:
+                assert agg[sec][k] == v, (sec, k)
+    bad = tmp_path / "bad.yaml"
+    bad.write_text(f"extends: {load_rules.__globals__['RULES_PATH']}\noverrides:\n  r5_dsr:\n    min_dsr: 0.1\n")
+    with pytest.raises(ValueError):
+        load_rules(bad)

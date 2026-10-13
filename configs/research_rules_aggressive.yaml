@@ -1,0 +1,14 @@
+# USER RISK-PROFILE OVERRIDE (2026-10-13). Requested by the user (Alonso): accepts max drawdown
+# up to -70% in exchange for volatile, right-skewed, low-win-rate / big-payoff strategies.
+# ONLY drawdown tolerances change. Every statistical rule (R4 WF, R5 DSR, R6 PBO, R7 SPA,
+# R8 MinTRL, R9 plateau, R10 costs, R11 delay, R12 regime/years, R13 p5 Sharpe/losing streak,
+# R14 data/capacity, R15 paper) is inherited unchanged from research_rules.yaml.
+# Committed on its own, BEFORE any edge-v2 data was loaded.
+extends: research_rules.yaml
+profile: aggressive_user_dd70
+version: 1
+overrides:
+  r12_regime:
+    worst_regime_min_dd: -0.70
+  r13_bootstrap:
+    min_p95_dd: -0.70

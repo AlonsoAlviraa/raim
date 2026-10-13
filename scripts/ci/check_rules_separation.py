@@ -8,12 +8,13 @@ import subprocess
 import sys
 
 RULES = "configs/research_rules.yaml"
+RULE_FILES = (RULES, "configs/research_rules_aggressive.yaml")
 RESULT_PREFIXES = ("reports/", "docs/research/", "registry/")
 
 
 def violations(paths: list[str]) -> list[str]:
     paths = [p.strip().replace("\\", "/") for p in paths if p.strip()]
-    if RULES not in paths:
+    if not any(r in paths for r in RULE_FILES):
         return []
     return [p for p in paths if p.startswith(RESULT_PREFIXES)]
 

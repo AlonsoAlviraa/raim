@@ -35,9 +35,27 @@ class ReportError(ValueError):
     pass
 
 
+AGGRESSIVE_PATH = RULES_PATH.parent / "research_rules_aggressive.yaml"
+# keys a risk-profile override may touch: drawdown tolerances ONLY (user preference)
+PROFILE_ALLOWED = {("r12_regime", "worst_regime_min_dd"), ("r13_bootstrap", "min_p95_dd")}
+
+
 def load_rules(path: str | Path | None = None) -> tuple[dict, str]:
-    b = Path(path or RULES_PATH).read_bytes()
-    return yaml.safe_load(b), hashlib.sha256(b).hexdigest()
+    """Load thresholds. A profile file (``extends:`` + ``overrides:``) inherits the base file and may
+    override ONLY drawdown tolerances; the returned sha covers base + profile bytes."""
+    p = Path(path or RULES_PATH)
+    b = p.read_bytes()
+    d = yaml.safe_load(b)
+    if isinstance(d, dict) and "extends" in d:
+        base, bsha = load_rules(p.parent / d["extends"])
+        for sec, kv in (d.get("overrides") or {}).items():
+            for k, v in kv.items():
+                if (sec, k) not in PROFILE_ALLOWED:
+                    raise ValueError(f"profile may not override {sec}.{k} (statistical rule)")
+                base[sec][k] = v
+        base["profile"] = d.get("profile")
+        return base, hashlib.sha256(bsha.encode() + b).hexdigest()
+    return d, hashlib.sha256(b).hexdigest()
 
 
 def validate_report(rep: dict) -> None:
