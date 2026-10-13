@@ -1,0 +1,33 @@
+family: C2_donchian_15m
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- n: 96
+  a: 3.0
+  lo: false
+- n: 96
+  a: 3.0
+  lo: true
+- n: 96
+  a: 6.0
+  lo: false
+- n: 96
+  a: 6.0
+  lo: true
+- n: 384
+  a: 3.0
+  lo: false
+- n: 384
+  a: 3.0
+  lo: true
+- n: 384
+  a: 6.0
+  lo: false
+- n: 384
+  a: 6.0
+  lo: true
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791838457.2096035);
+  kept for audit, cannot satisfy R1

@@ -1,0 +1,17 @@
+family: S6_pairs_coint
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- W: 168
+  z: 2.0
+- W: 168
+  z: 3.0
+- W: 720
+  z: 2.0
+- W: 720
+  z: 3.0
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791837063.8339727);
+  kept for audit, cannot satisfy R1

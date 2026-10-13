@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging
 import os
 
-from raim.core import features_ref, governor_ref, hmm_ref, quoter_ref, simexchange_ref
+from raim.core import features_ref, flowcpd_ref, governor_ref, hmm_ref, quoter_ref, simexchange_ref
 from raim.core.features_ref import FEATURE_NAMES
 
 log = logging.getLogger(__name__)
@@ -30,6 +30,8 @@ if _cpp is not None:
     RiskGovernor = _cpp.RiskGovernor
     SimExchange = _cpp.SimExchange
     quote = _cpp.quote
+    exposure_adjust = _cpp.exposure_adjust
+    FlowCPD = _cpp.FlowCPD
 else:
     BACKEND = "python"
     FeatureEngine = features_ref.FeatureEngine
@@ -37,8 +39,10 @@ else:
     RiskGovernor = governor_ref.RiskGovernor
     SimExchange = simexchange_ref.SimExchange
     quote = quoter_ref.quote
+    exposure_adjust = quoter_ref.exposure_adjust
+    FlowCPD = flowcpd_ref.FlowCPD
 
 log.info("RAIM fast-body backend: %s", BACKEND)
 
 __all__ = ["BACKEND", "FEATURE_NAMES", "FeatureEngine", "HMMFilter", "RiskGovernor",
-           "SimExchange", "quote"]
+           "SimExchange", "quote", "exposure_adjust", "FlowCPD"]

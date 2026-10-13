@@ -1,0 +1,25 @@
+family: P2_donchian_pit_long_filter
+retroactive: false
+hypothesis: >
+  The Donchian ensemble (S3/C7) looked good on a fixed survivor list but weak on a PIT universe
+  (overfitting PBO 0.47-0.50, unstable regimes). A LONG-ONLY version with the full fixed lookback
+  set (no lookback choice = plateau centre by construction), inverse-vol sizing and an optional BTC
+  trend filter should be more stable and right-skewed.
+mechanism: trend persistence in crypto (Zarattini et al., SSRN 5209907); long-only removes the costly short side on spot
+universe: PIT top-N Binance USDT spot pairs by trailing 30d median quote volume, incl. delisted
+data: spot_1d panel; development < 2025-10-01; never >= 2026-10-13
+signal: >
+  convex.donchian_pit_weights(close, PIT top-N, lookbacks [5,10,20,30,60,90,150,250,360], tv)
+  clipped at >= 0 (long-only), times 1{BTC close > SMA200} when filter = btc200.
+costs: VIP0 spot fee + tiered slippage
+grid:
+  - {N: 20, tv: 0.25, filter: none}
+  - {N: 20, tv: 0.25, filter: btc200}
+  - {N: 20, tv: 0.5, filter: none}
+  - {N: 20, tv: 0.5, filter: btc200}
+  - {N: 50, tv: 0.25, filter: none}
+  - {N: 50, tv: 0.25, filter: btc200}
+  - {N: 50, tv: 0.5, filter: none}
+  - {N: 50, tv: 0.5, filter: btc200}
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml v1 (unchanged)

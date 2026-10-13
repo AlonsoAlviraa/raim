@@ -1,0 +1,23 @@
+family: P4_majors_trend_cash
+retroactive: false
+hypothesis: >
+  The simplest possible trend rule on the two most liquid assets (BTC, ETH): long when in
+  up-trend, cash otherwise, vol-targeted. Low capacity risk, low cost, should avoid most of the
+  BTC bear drawdown while keeping upside (right skew vs buy & hold).
+mechanism: time-series momentum (Moskowitz, Ooi & Pedersen 2012) applied to crypto majors
+universe: BTCUSDT, ETHUSDT spot (both trade over the whole sample, so no survivorship choice)
+data: spot_1d panel; development < 2025-10-01; never >= 2026-10-13
+signal: >
+  per asset: rule = sma100 (close > SMA100), sma200 (close > SMA200) or donchian (mean of
+  trend.donchian_state over [20,60,120,250] clipped >= 0); weight = signal * min(0.5/vol90, 2) /
+  n_assets, gross <= 1.
+costs: VIP0 spot fee + tiered slippage
+grid:
+  - {assets: BTC, rule: sma100}
+  - {assets: BTC, rule: sma200}
+  - {assets: BTC, rule: donchian}
+  - {assets: BTC_ETH, rule: sma100}
+  - {assets: BTC_ETH, rule: sma200}
+  - {assets: BTC_ETH, rule: donchian}
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml v1 (unchanged)

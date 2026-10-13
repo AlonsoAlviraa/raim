@@ -1,0 +1,17 @@
+family: C3_squeeze_4h
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- kc: 1.5
+  a: 2.0
+- kc: 1.5
+  a: 4.0
+- kc: 2.0
+  a: 2.0
+- kc: 2.0
+  a: 4.0
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791838429.5173187);
+  kept for audit, cannot satisfy R1

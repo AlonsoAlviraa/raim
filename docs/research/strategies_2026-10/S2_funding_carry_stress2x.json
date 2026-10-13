@@ -1,0 +1,87 @@
+{
+  "name": "S2_funding_carry_stress2x",
+  "metrics": {
+    "n_days": 1740,
+    "sr_daily": 0.1616492245822904,
+    "sharpe": 3.088304099330302,
+    "ann_ret": 0.007720537145873063,
+    "ann_vol": 0.0024913570532071804,
+    "max_dd": -0.0036757816098194063,
+    "cvar5": -0.00018120841632289999,
+    "skew": 2.687348563822713,
+    "kurt": 27.825810542485577,
+    "total_ret": 0.037343795521162626,
+    "pct_days_active": 0.15057471264367817,
+    "turnover_ann": 3.9856321839080455,
+    "cost_ann": 0.004583477011494252,
+    "funding_ann": 0.01162057999281609,
+    "gross_ann": 0.0006569652189933581,
+    "folds_positive": 2,
+    "n_folds": 5
+  },
+  "folds": [
+    {
+      "test_start": "2021-12-19",
+      "test_end": "2022-12-01",
+      "param": {
+        "lookback": 21,
+        "thr": 0.0001
+      },
+      "train_sr_daily": 0.5152009070811061,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0
+    },
+    {
+      "test_start": "2022-12-04",
+      "test_end": "2023-11-16",
+      "param": {
+        "lookback": 21,
+        "thr": 0.0001
+      },
+      "train_sr_daily": 0.3405533055354162,
+      "oos_sharpe": -0.4859725075136932,
+      "oos_total_ret": -0.0007860877229518559
+    },
+    {
+      "test_start": "2023-11-19",
+      "test_end": "2024-10-31",
+      "param": {
+        "lookback": 21,
+        "thr": 0.0001
+      },
+      "train_sr_daily": 0.266229557636433,
+      "oos_sharpe": 6.809825160171447,
+      "oos_total_ret": 0.03036510290648664
+    },
+    {
+      "test_start": "2024-11-03",
+      "test_end": "2025-10-16",
+      "param": {
+        "lookback": 21,
+        "thr": 0.0001
+      },
+      "train_sr_daily": 0.2713911530809983,
+      "oos_sharpe": 3.562955388383353,
+      "oos_total_ret": 0.007565063421713258
+    },
+    {
+      "test_start": "2025-10-19",
+      "test_end": "2026-10-01",
+      "param": {
+        "lookback": 21,
+        "thr": 0.0001
+      },
+      "train_sr_daily": 0.24978071475132765,
+      "oos_sharpe": 0.0,
+      "oos_total_ret": 0.0
+    }
+  ],
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "DOGEUSDT"
+  ]
+}

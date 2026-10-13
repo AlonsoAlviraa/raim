@@ -1,0 +1,41 @@
+family: S4_tsmom_atr_6h
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- L: 12
+  theta: 0.02
+  alpha: 2.5
+  short: false
+- L: 12
+  theta: 0.02
+  alpha: 2.5
+  short: true
+- L: 12
+  theta: 0.05
+  alpha: 2.5
+  short: false
+- L: 12
+  theta: 0.05
+  alpha: 2.5
+  short: true
+- L: 28
+  theta: 0.02
+  alpha: 2.5
+  short: false
+- L: 28
+  theta: 0.02
+  alpha: 2.5
+  short: true
+- L: 28
+  theta: 0.05
+  alpha: 2.5
+  short: false
+- L: 28
+  theta: 0.05
+  alpha: 2.5
+  short: true
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791837058.9292984);
+  kept for audit, cannot satisfy R1

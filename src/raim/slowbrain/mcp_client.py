@@ -33,8 +33,33 @@ def check_envelope(result: Any) -> Any:
     return result
 
 
+PINNED_PACKAGE = "tradingview-mcp-server"
+PINNED_VERSION = "0.8.1"   # verified on PyPI 2026-10-12 (repo atilaahmettaner/tradingview-mcp)
+
+
+def validate_mcp_command(command: list[str]) -> None:
+    """Supply-chain guard: only `uvx --from tradingview-mcp-server==<pinned> tradingview-mcp`.
+    Several unrelated projects share the name "tradingview-mcp" (incl. malicious npm clones):
+    npm/npx/node are always refused, and the PyPI package must be pinned exactly."""
+    toks = [str(t) for t in command]
+    low = [t.lower() for t in toks]
+    if any(b in t for t in low for b in ("npm", "npx", "node", "pnpm", "yarn", "bun")):
+        raise ValueError("npm/node launchers are refused for tradingview-mcp")
+    exe = low[0].replace("\\", "/").rsplit("/", 1)[-1] if low else ""
+    if exe not in ("uvx", "uvx.exe"):
+        raise ValueError("tradingview-mcp must be launched with uvx")
+    if "--from" not in low or low.index("--from") + 1 >= len(low):
+        raise ValueError("missing --from <package>==<version>")
+    spec = toks[low.index("--from") + 1]
+    if spec != f"{PINNED_PACKAGE}=={PINNED_VERSION}":
+        raise ValueError(f"package must be pinned to {PINNED_PACKAGE}=={PINNED_VERSION}, got {spec!r}")
+    if low[-1] != "tradingview-mcp":
+        raise ValueError("entry point must be tradingview-mcp")
+
+
 class TradingViewMCP:
     def __init__(self, command: list[str], min_spacing_s: float = 1.0) -> None:
+        validate_mcp_command(command)
         self.command = command
         self.min_spacing = max(min_spacing_s, 0.8)
         self._sem = asyncio.Semaphore(4)

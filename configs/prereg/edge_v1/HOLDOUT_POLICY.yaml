@@ -1,0 +1,23 @@
+# edge-v1 holdout decision, written BEFORE downloading any edge-v1 data.
+window: ["2025-10-01", "2026-10-01"]
+seal: holdout_2025-10_edge
+use: one_shot_holdout (frozen plateau-centre parameter from dev, Vault.open_once per family)
+r7_benchmark: cash for all three families (dollar-neutral books; rules v2 market_neutral_benchmarks)
+families:
+  E1_funding_carry_xs:
+    r3_status: designer_contaminated
+    reason: >
+      The designer read a public report (bryanvine alpha-research, paper2) stating cross-sectional
+      funding carry was +1.7% through the Oct-2025 cascade, i.e. knowledge of this window.
+  E2_reversal_volshock_xs:
+    r3_status: designer_contaminated
+    reason: >
+      Built only from prices and quote volume of coins whose spot prices/volumes in this window
+      the designer already saw (rounds 1-2, PIT panel). Not genuinely unseen.
+  E3_taker_flow_xs:
+    r3_status: opened
+    reason: >
+      Taker buy/sell flow and perp cross-section were never loaded by the designer for any window
+      and no source seen reports this signal on 2025-10..2026-10. Treated as a genuine one-shot
+      holdout; the designer does know the market path (BTC fell ~27%), which matters little for a
+      dollar-neutral book. Caveat documented.

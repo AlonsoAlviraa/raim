@@ -8,3 +8,10 @@
 | SIM-3 | Media | 22 % de los ticks sintéticos en `rate_backoff`: el tope de mensajes del OMS coincide con el umbral del governor ⇒ backoff auto-inducido. | Abierto: OMS con presupuesto < umbral y cancel/replace agrupado. |
 | SIM-4 | Media | Sin liquidez oculta/icebergs, sin impacto propio, snapshots de profundidad cada 100 ms (cambios intra-snapshot invisibles). | Abierto; documentado. |
 | SIM-5 | Baja | El stream de depth parcial no trae tiempo de exchange; se usa recepción. | Documentado. |
+
+## Fase 3 (2026-10-12) — hallazgos de la batería de estrés
+| ID | Severidad | Hallazgo | Estado |
+|---|---|---|---|
+| PH3-1 | Media | Sesgo de inventario terminal **positivo y significativo** (p≈0) en casi todos los escenarios, aunque pequeño (~0,0002 BTC). Hay una asimetría sistemática sin identificar (¿redondeo de tamaños por `exposure_adjust`? ¿orden de cancel/replace?). | **Abierto**: investigar antes de aceptar cualquier configuración (criterio Yang & Xu). |
+| PH3-2 | Media | `base`, `thin` y `thick` dan resultados **idénticos**: con quotes a ≥0,5 bps los fills solo vienen de trade-through y la profundidad no influye. La batería no discrimina liquidez con esta configuración. | Abierto: añadir escenarios donde se cotice en el touch, o impacto de la profundidad sobre el sweep. |
+| PH3-3 | Info | `drift_up` y `drift_up+thin`: 0 fills. La asimetría de exposición protege el ask y el bid no se ejecuta con flujo comprador. Es coherente, pero no hay muestra. | Informativo. |

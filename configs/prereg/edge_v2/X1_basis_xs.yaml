@@ -1,0 +1,27 @@
+family: X1_basis_xs
+retroactive: false
+hypothesis: >
+  Cross-sectionally, perps with a HIGH perp-vs-index premium (log basis) earn higher next-day/next-week
+  returns than perps with a low premium; basis momentum (change in basis) adds information.
+mechanism: >
+  Basis is the strongest cross-sectional crypto-futures factor (Chi, Hao, Hu & Ran, J. Futures Markets
+  43(8) 2023: basis factor t=7.1, 5d look-back / 1d hold); perpetual cost-of-carry two-factor model
+  (log basis + price-volume) explains 63 significant perp predictors ("Three essays on futures expected
+  returns", 2025 thesis). Premium reflects demand pressure of informed leveraged longs.
+signal: >
+  basis = premiumIndexKlines 1d close (Binance USDT-M); level = mean over W days; mom = basis_t - basis_{t-W};
+  within PIT top-N rank: long top 20%, short bottom 20%, equal weight, gross 1; rebalance every `reb` days.
+universe: PIT top-N Binance USDT-M perps by trailing 30d median quote volume (incl. delisted), >= 60d history
+data: data.binance.vision futures/um monthly premiumIndexKlines 1d (NEW, downloaded AFTER this commit) + existing perp klines/funding; dev < 2025-10-01; never >= 2026-10-13
+costs: VIP0 perp taker 5 bps + tiered slippage (3/10/30/80 bps per side); funding paid/received
+market_neutral: true
+benchmark_r7: cash
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules_aggressive.yaml (user DD profile -70%)
+grid:
+  - {sig: level, W: 1, reb: 1, N: 60}
+  - {sig: level, W: 5, reb: 1, N: 60}
+  - {sig: level, W: 5, reb: 5, N: 60}
+  - {sig: level, W: 5, reb: 5, N: 30}
+  - {sig: mom, W: 5, reb: 5, N: 60}
+  - {sig: mom, W: 10, reb: 5, N: 60}

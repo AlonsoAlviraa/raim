@@ -1,0 +1,26 @@
+family: E2_reversal_volshock_xs
+retroactive: false
+hypothesis: >
+  Short-term reversal (liquidity provision) is concentrated in coins with LOW abnormal volume;
+  a dollar-neutral long-losers/short-winners book conditioned on volume shock earns it.
+mechanism: >
+  Returns to liquidity provision / inventory risk (Farag, Luo, Yarovaya & Zieba, JBF 175, 2025;
+  Riksbank WP 413); reversal factor in crypto four-factor model (CAFR 2025).
+signal: >
+  r = k-day return; vshock = log(qv_k / median qv over prior 60d); within PIT top-N=60: if
+  cond=low_vshock keep the half with vshock below the cross-sectional median, else all; long
+  bottom 20% by r, short top 20%, equal weight, gross 1; rebalance every k days.
+universe: PIT top-N Binance USDT-M perpetuals by trailing 30d median quote volume (perp daily klines), incl. delisted; >= 60d history
+data: data.binance.vision futures/um monthly klines 1d + fundingRate (downloaded AFTER this commit); development < 2025-10-01; never >= 2026-10-13
+costs: VIP0 perp taker 5 bps + tiered slippage by trailing perp volume (3/10/30/80 bps per side); funding paid/received per position
+market_neutral: true
+benchmark_r7: cash (rules v2)
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml v2
+grid:
+  - {k: 1, cond: all}
+  - {k: 1, cond: low_vshock}
+  - {k: 3, cond: all}
+  - {k: 3, cond: low_vshock}
+  - {k: 7, cond: all}
+  - {k: 7, cond: low_vshock}

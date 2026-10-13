@@ -1,0 +1,261 @@
+{
+  "seals": {
+    "vault_2026-10-13": {
+      "start": "2026-10-13",
+      "end": "2027-10-13",
+      "families": "*",
+      "data_sha": null,
+      "sealed_at": 1791869613.836068,
+      "validator_sha": "81ce977a4705ddea3385e092fc136d156c2b958af4d279402a957487a8a2bb73",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
+    },
+    "holdout_2025-10": {
+      "start": "2025-10-01",
+      "end": "2026-10-01",
+      "families": [
+        "P1_alt_tsmom_btc_filter",
+        "P2_donchian_pit_long_filter",
+        "P3_dual_momentum_cash",
+        "P4_majors_trend_cash"
+      ],
+      "data_sha": null,
+      "sealed_at": 1791873303.2719054,
+      "validator_sha": "81ce977a4705ddea3385e092fc136d156c2b958af4d279402a957487a8a2bb73",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
+    },
+    "holdout_2025-10_edge": {
+      "start": "2025-10-01",
+      "end": "2026-10-01",
+      "families": [
+        "E1_funding_carry_xs",
+        "E2_reversal_volshock_xs",
+        "E3_taker_flow_xs"
+      ],
+      "data_sha": null,
+      "sealed_at": 1791880563.1090748,
+      "validator_sha": "81ce977a4705ddea3385e092fc136d156c2b958af4d279402a957487a8a2bb73",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
+    },
+    "holdout_2025-10_edge2": {
+      "start": "2025-10-01",
+      "end": "2026-10-01",
+      "families": [
+        "X1_basis_xs",
+        "X2_flow_breakout_convex",
+        "X3_funding_shock_conditional"
+      ],
+      "data_sha": null,
+      "sealed_at": 1791898815.1332016,
+      "validator_sha": "ca6d056fe6ae7e73798cd899551342aec10b212236da4bc978e7dabbaa8fdabd",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
+    },
+    "holdout_2025-10_bondeq": {
+      "start": "2025-10-01",
+      "end": "2026-10-01",
+      "families": [
+        "B1_stock_leads_credit",
+        "B2_corp_bond_slope",
+        "B3_credit_spread_trend"
+      ],
+      "data_sha": null,
+      "sealed_at": 1791911627.3679464,
+      "validator_sha": "ca6d056fe6ae7e73798cd899551342aec10b212236da4bc978e7dabbaa8fdabd",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
+    }
+  },
+  "families": {
+    "P1_alt_tsmom_btc_filter": {
+      "status": "opened",
+      "seal": "holdout_2025-10",
+      "ts": 1791873349.4249961
+    },
+    "P2_donchian_pit_long_filter": {
+      "status": "opened",
+      "seal": "holdout_2025-10",
+      "ts": 1791873450.7556248
+    },
+    "P3_dual_momentum_cash": {
+      "status": "opened",
+      "seal": "holdout_2025-10",
+      "ts": 1791873465.303843
+    },
+    "P4_majors_trend_cash": {
+      "status": "opened",
+      "seal": "holdout_2025-10",
+      "ts": 1791873470.0996811
+    },
+    "E1_funding_carry_xs": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge",
+      "ts": 1791881141.3049104
+    },
+    "E2_reversal_volshock_xs": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge",
+      "ts": 1791881152.1609073
+    },
+    "E3_taker_flow_xs": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge",
+      "ts": 1791881162.3448312
+    },
+    "X1_basis_xs": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge2",
+      "ts": 1791899234.7520437
+    },
+    "X2_flow_breakout_convex": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge2",
+      "ts": 1791899248.6944277
+    },
+    "X3_funding_shock_conditional": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge2",
+      "ts": 1791899257.8558114
+    },
+    "B1_stock_leads_credit": {
+      "status": "opened",
+      "seal": "holdout_2025-10_bondeq",
+      "ts": 1791911712.8752182
+    },
+    "B2_corp_bond_slope": {
+      "status": "opened",
+      "seal": "holdout_2025-10_bondeq",
+      "ts": 1791911720.606052
+    },
+    "B3_credit_spread_trend": {
+      "status": "opened",
+      "seal": "holdout_2025-10_bondeq",
+      "ts": 1791911727.6985497
+    }
+  },
+  "contaminated": {
+    "S3_donchian_ensemble": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791868845.1232939
+    },
+    "S1_basis_arb": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791868900.8942585
+    },
+    "S2_funding_carry": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791868937.926268
+    },
+    "S4_tsmom_atr_6h": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791868956.6681147
+    },
+    "S6_pairs_coint": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869462.7606153
+    },
+    "C1_intraday_tsmom_30m": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869468.4683275
+    },
+    "C2_donchian_15m": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869484.1949658
+    },
+    "C3_squeeze_4h": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869490.7571414
+    },
+    "C4_funding_extremes": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869498.1263492
+    },
+    "C5_cascade_1h": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869508.0453398
+    },
+    "C6_alt_tsmom_weekly_pit": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869515.339515
+    },
+    "C7_S3_donchian_pit20": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869589.2679207
+    },
+    "C8_new_listings": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869595.4900188
+    },
+    "S5_leadlag_1m": {
+      "status": "spent_contaminated",
+      "window": [
+        "2024-07-01",
+        "2025-07-01"
+      ],
+      "reason": "S5 only has 1m data 2024-07..2025-07; its last 12 months were its walk-forward OOS -> no clean hold-out",
+      "ts": 1791869623.3123732
+    }
+  }
+}

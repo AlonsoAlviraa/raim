@@ -1,0 +1,27 @@
+family: P1_alt_tsmom_btc_filter
+retroactive: false
+hypothesis: >
+  Altcoin time-series momentum (Han, Kang & Ryu, SSRN 4675565; our C6) earns its premium in BTC
+  up-trends and gives it back in bear markets (C6 rescore: bear SR -1.04). Going to cash when BTC
+  is below its long moving average should cut the bear drawdown and keep a right-skewed payoff.
+mechanism: >
+  Slow-moving capital and retail trend chasing produce trend persistence in alts that is
+  conditional on BTC risk appetite; when BTC trends down correlations go to 1 and alt momentum
+  crashes, so a market-state filter removes the left tail (cf. momentum crashes, Daniel & Moskowitz).
+universe: PIT top-N Binance USDT spot pairs by trailing 30d median quote volume, incl. delisted
+data: spot_1d panel; development < 2025-10-01; never >= 2026-10-13 (sealed vault)
+signal: >
+  convex.alt_tsmom_weights(close, PIT top-N, L weeks, target_vol 0.5), weekly rebalance (Sunday);
+  multiplied by 1{BTC close > SMA_s(BTC close)} evaluated on the same day (engine adds +1 bar).
+costs: VIP0 spot fee 10 bps + tiered slippage by trailing volume (3/10/30/80 bps per side)
+grid:
+  - {N: 20, L: 4, sma: 100}
+  - {N: 20, L: 4, sma: 200}
+  - {N: 20, L: 12, sma: 100}
+  - {N: 20, L: 12, sma: 200}
+  - {N: 50, L: 4, sma: 100}
+  - {N: 50, L: 4, sma: 200}
+  - {N: 50, L: 12, sma: 100}
+  - {N: 50, L: 12, sma: 200}
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml v1 (unchanged)

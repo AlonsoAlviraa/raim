@@ -1,0 +1,31 @@
+family: X2_flow_breakout_convex
+retroactive: false
+hypothesis: >
+  Long-only altcoin breakouts CONFIRMED by persistent net taker buying (E3 residual flow) have a
+  right-skewed payoff: few large winners pay for many small losers. Flow confirmation filters
+  false breakouts that killed plain Donchian (S3/P2).
+mechanism: >
+  Permanent order-flow component carries information (Order flow and cryptocurrency returns, J. Financial
+  Markets 2026); time-series momentum/breakout convexity (trend-following payoff ~ long straddle,
+  Fung & Hsieh 2001); E3 in this repo (SR 0.92, PBO 0).
+signal: >
+  entry when close_t >= max(close over prior L days) AND cross-sectional rank of 7d residual taker flow
+  >= q within PIT top-60 AND (btc_filter: BTC close > its 100d SMA); exit when close < min(close over
+  prior L/2 days) (Donchian exit, lets winners run); each position weight 1/10, max 10 positions
+  (gross <= 1, long-only, no leverage).
+universe: PIT top-60 Binance USDT-M perps (incl. delisted), >= 60d history
+data: existing perp 1d klines (taker_buy_quote) + funding; dev < 2025-10-01; never >= 2026-10-13
+costs: VIP0 perp taker 5 bps + tiered slippage; funding paid
+market_neutral: false
+benchmark_r7: btc_buy_hold + cash
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules_aggressive.yaml (user DD profile -70%)
+grid:
+  - {L: 20, q: 0.5, btc_filter: no}
+  - {L: 20, q: 0.8, btc_filter: no}
+  - {L: 55, q: 0.5, btc_filter: no}
+  - {L: 55, q: 0.8, btc_filter: no}
+  - {L: 20, q: 0.5, btc_filter: yes}
+  - {L: 20, q: 0.8, btc_filter: yes}
+  - {L: 55, q: 0.5, btc_filter: yes}
+  - {L: 55, q: 0.8, btc_filter: yes}

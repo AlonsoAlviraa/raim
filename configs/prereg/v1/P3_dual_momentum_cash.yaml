@@ -1,0 +1,25 @@
+family: P3_dual_momentum_cash
+retroactive: false
+hypothesis: >
+  Cross-sectional + absolute ("dual") momentum with a cash fallback (Antonacci-style) concentrates
+  in the strongest liquid coins only when the market trend is up, and holds cash otherwise,
+  giving few large winners (right skew) and limited bear losses.
+mechanism: cross-sectional crypto momentum (Liu, Tsyvinski & Wu 2022, JF) plus market-state filter
+universe: PIT top-50 Binance USDT spot pairs by trailing 30d median quote volume, incl. delisted
+data: spot_1d panel; development < 2025-10-01; never >= 2026-10-13
+signal: >
+  every `reb` days pick the top-k coins of the PIT top-50 by L-day return, keep only those with
+  L-day return > 0, inverse-vol weights scaled to 0.5 target vol (gross <= 1); all cash if BTC
+  close <= SMA200(BTC).
+costs: VIP0 spot fee + tiered slippage
+grid:
+  - {k: 3, L: 30, reb: 7}
+  - {k: 3, L: 30, reb: 28}
+  - {k: 3, L: 90, reb: 7}
+  - {k: 3, L: 90, reb: 28}
+  - {k: 5, L: 30, reb: 7}
+  - {k: 5, L: 30, reb: 28}
+  - {k: 5, L: 90, reb: 7}
+  - {k: 5, L: 90, reb: 28}
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml v1 (unchanged)

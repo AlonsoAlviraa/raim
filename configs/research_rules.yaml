@@ -1,0 +1,68 @@
+# RAIM research "super rules" (docs: /workspace/research/x_backtest_rules_2026-10.md, section C).
+# SINGLE SOURCE OF TRUTH for every verdict threshold. Read only by raim.research.verdict.
+# CI (scripts/ci/check_rules_separation.py) rejects any change set that edits this file together
+# with research results (reports/, docs/research/). Bump `version` on every change.
+version: 2   # v2 (2026-10-13): market-neutral families are benchmarked vs cash only (R7)
+r1_prereg:
+  max_variants_per_family: 50
+  required_fields: [family, hypothesis, mechanism, universe, grid, metric]
+r2_registry:
+  dedupe_by_trial_hash: true
+r3_vault:
+  months: 12
+  min_holdout_sharpe: 0.0
+r4_walk_forward:
+  min_folds: 5
+  min_positive_fraction: 0.8
+  min_embargo_fraction: 0.01
+r5_dsr:
+  min_dsr: 0.95
+r6_pbo:
+  blocks: 16
+  max_pbo: 0.25
+r7_spa:
+  max_p: 0.05
+  bootstrap: 2000
+  mean_block: 10
+  benchmarks: [btc_buy_hold, cash]
+  market_neutral_benchmarks: [cash]   # dollar-neutral L/S books carry no BTC beta by construction
+r8_mintrl:
+  sr_star: 0.0
+  confidence: 0.95
+  min_trades: 200
+r9_plateau:
+  neighbor_keep: 0.70
+  min_stability: 0.70
+  selector: plateau
+r10_costs:
+  stress_multiplier: 2.0
+  min_sharpe_at_stress: 0.5
+  min_breakeven_multiple: 3.0
+r11_execution:
+  extra_delay_bars: 1
+  min_sharpe_retention: 0.70
+r12_regime:
+  min_regimes_positive: 2
+  min_years_positive_fraction: 0.75
+  worst_regime_min_dd: -0.30
+  sma_days: 200
+  slope_days: 20
+r13_bootstrap:
+  n_resamples: 10000
+  mean_block: 20
+  min_p5_sharpe: 0.0
+  min_p95_dd: -0.35
+  max_p95_losing_streak_days: 15   # consecutive losing days, p95 across resamples
+r14_data_capacity:
+  require_manifest: true
+  require_pit_universe: true
+  target_capital_usd: 100000
+  max_adv_participation: 0.01
+r15_paper:
+  min_days: 90
+  min_trades: 100
+  min_sharpe_ratio_vs_oos: 0.5
+  kill_dd_quantile: 0.99
+  cusum_k_sigma: 0.5
+  cusum_h_sigma: 5.0
+rf_annual: 0.04

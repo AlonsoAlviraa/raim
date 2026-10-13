@@ -1,0 +1,9 @@
+# bondeq-v1 holdout decision, written BEFORE downloading any ETF/FRED data.
+window: ["2025-10-01", "2026-10-01"]
+seal: holdout_2025-10_bondeq
+use: one_shot diagnostic (frozen plateau-centre parameter, Vault.open_once per family)
+families:
+  B1_stock_leads_credit: {r3_status: designer_contaminated, reason: "Designer follows US equity/credit markets and knows the 2025-26 path of SPY and credit spreads."}
+  B2_corp_bond_slope: {r3_status: designer_contaminated, reason: "Same: the 2025-26 SPY/bond path is known to the designer."}
+  B3_credit_spread_trend: {r3_status: designer_contaminated, reason: "Same: the 2025-26 SPY/credit-spread path is known to the designer."}
+user_gate: "beat SPY by >= 3pp in >= 2 of 4 calendar years (reported, research gate only)"

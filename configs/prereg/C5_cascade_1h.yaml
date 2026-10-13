@@ -1,0 +1,33 @@
+family: C5_cascade_1h
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- k: 4.0
+  H: 4
+  dir: cont
+- k: 4.0
+  H: 4
+  dir: rev
+- k: 4.0
+  H: 24
+  dir: cont
+- k: 4.0
+  H: 24
+  dir: rev
+- k: 6.0
+  H: 4
+  dir: cont
+- k: 6.0
+  H: 4
+  dir: rev
+- k: 6.0
+  H: 24
+  dir: cont
+- k: 6.0
+  H: 24
+  dir: rev
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791838439.5601509);
+  kept for audit, cannot satisfy R1

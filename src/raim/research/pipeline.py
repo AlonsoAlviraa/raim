@@ -78,4 +78,35 @@ def walk_forward(events: list, cfg: RaimConfig, n_folds: int = 4, purge: int = 2
     return pd.DataFrame(rows)
 
 
+def compare_regime_models(events: list, cfg: RaimConfig, n_folds: int = 4, purge: int = 200,
+                          embargo: int = 100) -> pd.DataFrame:
+    """Same purged/embargoed folds, two regime models: 4-state HMM vs continuous stress index
+    (Thawait 2026). Report only — differences on short/synthetic samples are not evidence."""
+    from raim.research.robustness import cvar, episodes
+    from raim.research.stress_index import StressIndex
+
+    books_at = [i for i, e in enumerate(events) if isinstance(e, BookSnapshot)]
+    folds = purged_walk_forward(len(books_at), n_folds, purge, embargo,
+                                min_train=min(1000, len(books_at) // 5))
+    rows = []
+    for k, f in enumerate(folds):
+        assert_no_leakage(f, purge)
+        tr = events[: books_at[f.train[-1]] + 1]
+        te = events[books_at[f.test[0]]: books_at[f.test[-1]] + 1]
+        params, scaler = fit_regimes(tr, cfg)
+        _, feats = feature_rows(tr, cfg)
+        obs = np.array([scaler.apply(obs_from_features(list(r))) for r in feats])
+        si = StressIndex.fit(obs[np.isfinite(obs).all(1)], n_bands=4, vol_col=1)
+        for name, model in (("hmm", None), ("stress_index", si)):
+            res = run_sim(te, cfg, params, scaler, regime_model=model)
+            mo = markouts(res.fills, res.mids)
+            pnl, _ = episodes(res.curve, 300)
+            rows.append({"model": name, "fold": k, "fills": len(res.fills),
+                         "equity_usd": res.final_equity, "max_dd_usd": res.max_drawdown,
+                         "cvar10_usd": cvar(pnl, 0.10) if len(pnl) else np.nan,
+                         "mo_5s_bps": float(mo["mo_5s_bps"].mean()) if not mo.empty else np.nan,
+                         "pc1_explained": si.explained if model is not None else np.nan})
+    return pd.DataFrame(rows)
+
+
 _ = Trade
