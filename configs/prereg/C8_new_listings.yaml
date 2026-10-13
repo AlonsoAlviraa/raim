@@ -1,0 +1,27 @@
+family: C8_new_listings
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: PIT top-N incl. delisted
+grid:
+- H: 3
+  cond: mom
+- H: 3
+  cond: all
+- H: 3
+  cond: fade_skip
+- H: 7
+  cond: mom
+- H: 7
+  cond: all
+- H: 7
+  cond: fade_skip
+- H: 30
+  cond: mom
+- H: 30
+  cond: all
+- H: 30
+  cond: fade_skip
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791838935.3022697);
+  kept for audit, cannot satisfy R1

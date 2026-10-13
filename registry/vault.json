@@ -1,0 +1,142 @@
+{
+  "seals": {
+    "vault_2026-10-13": {
+      "start": "2026-10-13",
+      "end": "2027-10-13",
+      "families": "*",
+      "data_sha": null,
+      "sealed_at": 1791869613.836068,
+      "validator_sha": "d15b752d46f0678d79adc99e1126874d249b3723f363af6467fe7642bb29ec8a",
+      "rules_sha": "74ab59bc85f1af5d63543f432fd4518c96a6c50ae56eb922f87416ae0a9fc5e6"
+    }
+  },
+  "families": {},
+  "contaminated": {
+    "S3_donchian_ensemble": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791868845.1232939
+    },
+    "S1_basis_arb": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791868900.8942585
+    },
+    "S2_funding_carry": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791868937.926268
+    },
+    "S4_tsmom_atr_6h": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791868956.6681147
+    },
+    "S6_pairs_coint": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869462.7606153
+    },
+    "C1_intraday_tsmom_30m": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869468.4683275
+    },
+    "C2_donchian_15m": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869484.1949658
+    },
+    "C3_squeeze_4h": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869490.7571414
+    },
+    "C4_funding_extremes": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869498.1263492
+    },
+    "C5_cascade_1h": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869508.0453398
+    },
+    "C6_alt_tsmom_weekly_pit": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869515.339515
+    },
+    "C7_S3_donchian_pit20": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869589.2679207
+    },
+    "C8_new_listings": {
+      "status": "spent_contaminated",
+      "window": [
+        "2025-10-01",
+        "2026-10-01"
+      ],
+      "reason": "last 12 months of available data were already used as walk-forward OOS in rounds 1-2 -> no clean hold-out",
+      "ts": 1791869595.4900188
+    },
+    "S5_leadlag_1m": {
+      "status": "spent_contaminated",
+      "window": [
+        "2024-07-01",
+        "2025-07-01"
+      ],
+      "reason": "S5 only has 1m data 2024-07..2025-07; its last 12 months were its walk-forward OOS -> no clean hold-out",
+      "ts": 1791869623.3123732
+    }
+  }
+}

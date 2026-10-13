@@ -1,0 +1,33 @@
+family: C1_intraday_tsmom_30m
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- h: 0
+  k: 0.0
+  lo: false
+- h: 0
+  k: 0.0
+  lo: true
+- h: 0
+  k: 1.0
+  lo: false
+- h: 0
+  k: 1.0
+  lo: true
+- h: 13
+  k: 0.0
+  lo: false
+- h: 13
+  k: 0.0
+  lo: true
+- h: 13
+  k: 1.0
+  lo: false
+- h: 13
+  k: 1.0
+  lo: true
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791838476.5053954);
+  kept for audit, cannot satisfy R1

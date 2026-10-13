@@ -1,0 +1,20 @@
+family: S5_leadlag_1m
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+  entry:
+  - 0
+  - 1
+  - 2
+  hold:
+  - 0
+  - -0.0001
+  delay:
+  - 0
+  - 1
+  alt: 5
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791836739.9187064);
+  kept for audit, cannot satisfy R1

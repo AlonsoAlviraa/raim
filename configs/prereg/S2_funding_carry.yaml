@@ -1,0 +1,29 @@
+family: S2_funding_carry
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- lookback: 0
+  thr: 0.0
+- lookback: 3
+  thr: 0.0001
+- lookback: 3
+  thr: 0.0002
+- lookback: 3
+  thr: 0.0004
+- lookback: 9
+  thr: 0.0001
+- lookback: 9
+  thr: 0.0002
+- lookback: 9
+  thr: 0.0004
+- lookback: 21
+  thr: 0.0001
+- lookback: 21
+  thr: 0.0002
+- lookback: 21
+  thr: 0.0004
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791837050.4268198);
+  kept for audit, cannot satisfy R1

@@ -1,0 +1,21 @@
+family: S3_donchian_ensemble
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- lb: all
+  tv: 0.25
+- lb: all
+  tv: 0.5
+- lb: short
+  tv: 0.25
+- lb: short
+  tv: 0.5
+- lb: long
+  tv: 0.25
+- lb: long
+  tv: 0.5
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791837054.9342961);
+  kept for audit, cannot satisfy R1

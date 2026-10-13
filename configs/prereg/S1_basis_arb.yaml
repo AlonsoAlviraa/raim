@@ -1,0 +1,21 @@
+family: S1_basis_arb
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- k: 1.0
+  short_spot: false
+- k: 1.0
+  short_spot: true
+- k: 1.5
+  short_spot: false
+- k: 1.5
+  short_spot: true
+- k: 2.0
+  short_spot: false
+- k: 2.0
+  short_spot: true
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791837030.5231657);
+  kept for audit, cannot satisfy R1

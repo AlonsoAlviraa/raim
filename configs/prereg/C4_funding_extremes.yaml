@@ -1,0 +1,21 @@
+family: C4_funding_extremes
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: fixed list chosen in 2026 (survivorship)
+grid:
+- q: 0.02
+  mode: conditional
+- q: 0.02
+  mode: squeeze
+- q: 0.02
+  mode: fade_pos
+- q: 0.05
+  mode: conditional
+- q: 0.05
+  mode: squeeze
+- q: 0.05
+  mode: fade_pos
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791838433.6085248);
+  kept for audit, cannot satisfy R1

@@ -1,0 +1,27 @@
+family: C6_alt_tsmom_weekly_pit
+retroactive: true
+hypothesis: see docs/research/strategies_2026-10.md / strategies_convex_2026-10.md
+mechanism: as documented in the round 1/2 reports
+universe: PIT top-N incl. delisted
+grid:
+- N: 20
+  L: 1
+  tv: 0.5
+- N: 20
+  L: 4
+  tv: 0.5
+- N: 20
+  L: 12
+  tv: 0.5
+- N: 50
+  L: 1
+  tv: 0.5
+- N: 50
+  L: 4
+  tv: 0.5
+- N: 50
+  L: 12
+  tv: 0.5
+metric: daily net Sharpe, walk-forward OOS
+note: written retroactively on 2026-10-13 AFTER data and trials (first trial ts 1791838896.5705283);
+  kept for audit, cannot satisfy R1
