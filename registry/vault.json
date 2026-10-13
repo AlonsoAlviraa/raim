@@ -85,6 +85,21 @@
       "status": "opened",
       "seal": "holdout_2025-10_edge",
       "ts": 1791881162.3448312
+    },
+    "X1_basis_xs": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge2",
+      "ts": 1791899234.7520437
+    },
+    "X2_flow_breakout_convex": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge2",
+      "ts": 1791899248.6944277
+    },
+    "X3_funding_shock_conditional": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge2",
+      "ts": 1791899257.8558114
     }
   },
   "contaminated": {
