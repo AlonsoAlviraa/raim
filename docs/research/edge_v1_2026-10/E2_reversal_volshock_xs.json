@@ -1,0 +1,359 @@
+{
+  "name": "E2_reversal_volshock_xs",
+  "family": "E2_reversal_volshock_xs",
+  "prereg_sha": "2130d45b8a5e716a84f720ce392a0886b9cd72144803ab7c74c3fc68a2e21554",
+  "prereg_check": {
+    "ok": true,
+    "registered_ts": 1791880563.1065814,
+    "retroactive": false,
+    "n_variants": 6,
+    "before_first_trial": true,
+    "reason": "",
+    "git_commit_ts": 1791880563.0,
+    "commit_before_first_trial": true
+  },
+  "data_manifest_sha": "92d33f12dc1d6726f166e4bc13f5fc4d2d24d4a76f4a922258d47207a1271c52",
+  "registry_path": "/workspace/raim-strategies/reports/strategies/trials.jsonl",
+  "oos": {
+    "n_days": 1395,
+    "sr_daily": -0.03660147712940839,
+    "sharpe": -0.699270238705989,
+    "ann_ret": -0.20887256403812782,
+    "ann_vol": 0.27944990230823247,
+    "max_dd": -0.6640668742554182,
+    "cvar5": -0.03368103153151228,
+    "skew": 0.734397815609459,
+    "kurt": 13.485504669511085,
+    "total_ret": -0.591580678391722,
+    "pct_days_active": 1.0,
+    "turnover_ann": 86.80197132616487,
+    "cost_ann": 0.0939918608124253,
+    "funding_ann": -0.004422935795997611,
+    "gross_ann": -0.09699620328502011,
+    "folds_positive": 1,
+    "n_folds": 5
+  },
+  "pbo": 0.2987567987567988,
+  "spa": {
+    "btc_buy_hold": 1.0,
+    "cash": 1.0
+  },
+  "plateau_stability": 0.0,
+  "selector": "plateau",
+  "n_variants": 6,
+  "costs": {
+    "breakeven_multiple": -1.0790204407529993,
+    "sharpe_at_stress": -1.03287829935814,
+    "curve": [
+      {
+        "cost_mult": 0,
+        "sharpe": -0.363
+      },
+      {
+        "cost_mult": 0.5,
+        "sharpe": -0.531
+      },
+      {
+        "cost_mult": 1,
+        "sharpe": -0.699
+      },
+      {
+        "cost_mult": 1.5,
+        "sharpe": -0.867
+      },
+      {
+        "cost_mult": 2,
+        "sharpe": -1.033
+      },
+      {
+        "cost_mult": 3,
+        "sharpe": -1.362
+      },
+      {
+        "cost_mult": 4,
+        "sharpe": -1.685
+      },
+      {
+        "cost_mult": 5,
+        "sharpe": -2.001
+      }
+    ]
+  },
+  "sharpe_extra_delay": -1.0169868216198625,
+  "regime": {
+    "regimes": {
+      "bull": {
+        "days": 781,
+        "sharpe": -0.19866738950892682,
+        "max_dd": -0.38079092155832095
+      },
+      "bear": {
+        "days": 324,
+        "sharpe": -1.391371286399744,
+        "max_dd": -0.3509456734022961
+      },
+      "sideways": {
+        "days": 290,
+        "sharpe": -1.5228831109139955,
+        "max_dd": -0.3093210261887802
+      }
+    },
+    "regimes_positive": 0,
+    "regimes_present": 3,
+    "worst_regime_dd": -0.38079092155832095,
+    "years": {
+      "2021": -4.576978517330367,
+      "2022": -1.745217928764651,
+      "2023": 0.3203184744601867,
+      "2024": 0.32250065812772594,
+      "2025": -0.12637669298047025
+    },
+    "years_positive_fraction": 0.4
+  },
+  "bootstrap": {
+    "n": 10000,
+    "sharpe_p5": -1.5772296662992797,
+    "sharpe_p50": -0.7052021562806199,
+    "sharpe_p95": 0.13336814440482156,
+    "dd_p95": -0.8597516810634044,
+    "dd_p99": -0.8997180538635675,
+    "underwater_streak_p95_days": 1394.0,
+    "losing_streak_p95_days": 11.0
+  },
+  "purge_days": 90,
+  "embargo_fraction": 0.01,
+  "n_trades": 2409,
+  "max_horizon_days": 14.0,
+  "capacity": {
+    "p95": 0.00022954381351681543,
+    "max": 0.0006115068380475674,
+    "median": 5.561611594996046e-05,
+    "n_obs": 4257,
+    "missing": []
+  },
+  "capacity_p95": 0.00022954381351681543,
+  "pit_universe": true,
+  "market_neutral": true,
+  "vault": {
+    "status": "designer_contaminated",
+    "reason": "Built only from prices and quote volume of coins whose spot prices/volumes in this window the designer already saw (rounds 1-2, PIT panel). Not genuinely unseen.",
+    "holdout_sharpe": -0.27249402030269837,
+    "holdout": {
+      "param": {
+        "k": 7,
+        "cond": "all"
+      },
+      "sharpe": -0.27249402030269837,
+      "ann_ret": -0.1804956606963325,
+      "max_dd": -0.27180823201978277,
+      "total_ret": -0.1804956606963325,
+      "btc_bh_total_ret": -0.26679726429263073,
+      "btc_bh_sharpe": -0.4654900639405648,
+      "days": 365
+    }
+  },
+  "paper": null,
+  "folds": [
+    {
+      "test_start": "2021-09-13",
+      "test_end": "2022-06-18",
+      "param": {
+        "k": 7,
+        "cond": "low_vshock"
+      },
+      "train_sr_daily": -0.09681798022867125,
+      "oos_sharpe": -2.8759330925828785,
+      "oos_total_ret": -0.5069287222600791,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2022-07-10",
+      "test_end": "2023-04-14",
+      "param": {
+        "k": 7,
+        "cond": "low_vshock"
+      },
+      "train_sr_daily": -0.09416416075697023,
+      "oos_sharpe": -1.4085908838006016,
+      "oos_total_ret": -0.21555261791346103,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2023-05-06",
+      "test_end": "2024-02-08",
+      "param": {
+        "k": 7,
+        "cond": "low_vshock"
+      },
+      "train_sr_daily": -0.09004508401879123,
+      "oos_sharpe": 1.2145662835674744,
+      "oos_total_ret": 0.2041292240463526,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2024-03-01",
+      "test_end": "2024-12-04",
+      "param": {
+        "k": 7,
+        "cond": "low_vshock"
+      },
+      "train_sr_daily": -0.07733268280507721,
+      "oos_sharpe": -0.15687858458725068,
+      "oos_total_ret": -0.06187528981445911,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2024-12-26",
+      "test_end": "2025-09-30",
+      "param": {
+        "k": 7,
+        "cond": "all"
+      },
+      "train_sr_daily": -0.03108082282531901,
+      "oos_sharpe": -0.07718123569332211,
+      "oos_total_ret": -0.06524222842504757,
+      "selector": "plateau"
+    }
+  ],
+  "oos_window": [
+    "2021-09-13",
+    "2025-09-30"
+  ],
+  "dev_end": "2025-10-01",
+  "elapsed_s": 10.6,
+  "verdict": {
+    "verdict": "KILL",
+    "checks": {
+      "R1": {
+        "pass": true,
+        "value": 6,
+        "threshold": "<= 50 variants, before data",
+        "note": ""
+      },
+      "R2": {
+        "pass": true,
+        "value": {
+          "N_global": 1604,
+          "N_family": 14
+        },
+        "threshold": "every variant of the family is in the registry",
+        "note": ""
+      },
+      "R3": {
+        "pass": false,
+        "value": "designer_contaminated",
+        "threshold": "opened once, clean, holdout SR > 0",
+        "note": "Built only from prices and quote volume of coins whose spot prices/volumes in this window the designer already saw (rounds 1-2, PIT panel). Not genuinely unseen."
+      },
+      "R4": {
+        "pass": false,
+        "value": "1/5",
+        "threshold": ">= 5 folds, >= 80% positive, purge>=horizon",
+        "note": ""
+      },
+      "R5": {
+        "pass": false,
+        "value": 0.0,
+        "threshold": ">= 0.95",
+        "note": ""
+      },
+      "R6": {
+        "pass": false,
+        "value": 0.2987567987567988,
+        "threshold": "<= 0.25",
+        "note": ""
+      },
+      "R7": {
+        "pass": false,
+        "value": {
+          "cash": 1.0
+        },
+        "threshold": "p <= 0.05 vs all",
+        "note": ""
+      },
+      "R8": {
+        "pass": false,
+        "value": {
+          "n_days": 1395,
+          "min_trl_days": null,
+          "n_trades": 2409
+        },
+        "threshold": "n_days >= MinTRL and trades >= 200",
+        "note": ""
+      },
+      "R9": {
+        "pass": false,
+        "value": 0.0,
+        "threshold": ">= 0.7 of neighbours keep 70% SR; plateau-centre selection",
+        "note": ""
+      },
+      "R10": {
+        "pass": false,
+        "value": {
+          "breakeven_x": -1.08,
+          "sharpe_2x": -1.03
+        },
+        "threshold": "breakeven >= 3.0x, SR@2x > 0.5",
+        "note": ""
+      },
+      "R11": {
+        "pass": false,
+        "value": 0.0,
+        "threshold": ">= 70% SR kept with +1 bar delay",
+        "note": ""
+      },
+      "R12": {
+        "pass": false,
+        "value": {
+          "regimes_pos": "0/3",
+          "years_pos": 0.4,
+          "worst_dd": -0.381
+        },
+        "threshold": ">=2/3 regimes SR>0, >=75% years, worst regime DD >= -30%",
+        "note": ""
+      },
+      "R13": {
+        "pass": false,
+        "value": {
+          "sr_p5": -1.58,
+          "dd_p95": -0.86,
+          "lose_streak_p95_d": 11.0
+        },
+        "threshold": "p5 SR > 0, p95 DD >= -35%, p95 losing streak tolerable",
+        "note": ""
+      },
+      "R14": {
+        "pass": true,
+        "value": {
+          "manifest": true,
+          "pit": true,
+          "adv_p95": 0.00023
+        },
+        "threshold": "manifest + PIT universe + <= 1% ADV",
+        "note": ""
+      },
+      "R15": {
+        "pass": false,
+        "value": "no paper track",
+        "threshold": ">= 90d or 100 trades paper, SR >= 50% OOS, inside CI",
+        "note": ""
+      }
+    },
+    "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7",
+    "rules_version": 2,
+    "failed": [
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9",
+      "R10",
+      "R11",
+      "R12",
+      "R13",
+      "R15"
+    ]
+  }
+}

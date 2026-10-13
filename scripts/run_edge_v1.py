@@ -81,7 +81,7 @@ def main():
     btc_dev = dev["close"]["BTCUSDT"]
     btc_ho = ho_panel["close"]["BTCUSDT"]
     policy = yaml.safe_load((SPECS / "HOLDOUT_POLICY.yaml").read_text())
-    for spec_path in sorted(SPECS.glob("P*.yaml")):
+    for spec_path in sorted(SPECS.glob("E*.yaml")):
         spec = yaml.safe_load(spec_path.read_text())
         pol = policy["families"][spec["family"]]
         fam, grid = spec["family"], spec["grid"]

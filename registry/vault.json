@@ -57,6 +57,21 @@
       "status": "opened",
       "seal": "holdout_2025-10",
       "ts": 1791873470.0996811
+    },
+    "E1_funding_carry_xs": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge",
+      "ts": 1791881141.3049104
+    },
+    "E2_reversal_volshock_xs": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge",
+      "ts": 1791881152.1609073
+    },
+    "E3_taker_flow_xs": {
+      "status": "opened",
+      "seal": "holdout_2025-10_edge",
+      "ts": 1791881162.3448312
     }
   },
   "contaminated": {
