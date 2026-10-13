@@ -113,6 +113,21 @@
       "status": "opened",
       "seal": "holdout_2025-10_edge2",
       "ts": 1791899257.8558114
+    },
+    "B1_stock_leads_credit": {
+      "status": "opened",
+      "seal": "holdout_2025-10_bondeq",
+      "ts": 1791911712.8752182
+    },
+    "B2_corp_bond_slope": {
+      "status": "opened",
+      "seal": "holdout_2025-10_bondeq",
+      "ts": 1791911720.606052
+    },
+    "B3_credit_spread_trend": {
+      "status": "opened",
+      "seal": "holdout_2025-10_bondeq",
+      "ts": 1791911727.6985497
     }
   },
   "contaminated": {

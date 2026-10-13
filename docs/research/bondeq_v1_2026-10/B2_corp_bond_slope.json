@@ -1,0 +1,582 @@
+{
+  "name": "B2_corp_bond_slope",
+  "family": "B2_corp_bond_slope",
+  "prereg_sha": "19739f43222e9eac8c13e5bfd1d0df898b66248f4890f147f0ef27580917e68e",
+  "prereg_check": {
+    "ok": true,
+    "registered_ts": 1791911627.37417,
+    "retroactive": false,
+    "n_variants": 6,
+    "before_first_trial": true,
+    "reason": "",
+    "git_commit_ts": 1791911627.0,
+    "commit_before_first_trial": true
+  },
+  "data_manifest_sha": "680067a6d92126045e4141f96b4862e2fa4367be6d0aa480168b43f33ec1e85e",
+  "registry_path": "/workspace/raim-strategies/reports/strategies/trials.jsonl",
+  "oos": {
+    "n_days": 4504,
+    "sr_daily": 0.029275850837259813,
+    "sharpe": 0.5593143449077651,
+    "ann_ret": 0.06402037226610946,
+    "ann_vol": 0.12498500744381177,
+    "max_dd": -0.23277750867325353,
+    "cvar5": -0.016392879597828976,
+    "skew": -0.9730782212722467,
+    "kurt": 33.32053011316847,
+    "total_ret": 1.1505766011714504,
+    "pct_days_active": 0.7491119005328597,
+    "turnover_ann": 44.40941385435169,
+    "cost_ann": 0.008881882770870337,
+    "funding_ann": 0.0,
+    "gross_ann": 0.07878779033259807,
+    "folds_positive": 5,
+    "n_folds": 5
+  },
+  "pbo": 0.39184149184149186,
+  "spa": {
+    "btc_buy_hold": 1.0,
+    "cash": 0.1215
+  },
+  "plateau_stability": 0.5,
+  "selector": "plateau",
+  "n_variants": 6,
+  "costs": {
+    "breakeven_multiple": 8.87061812963758,
+    "sharpe_at_stress": 0.4880344995084545,
+    "curve": [
+      {
+        "cost_mult": 0,
+        "sharpe": 0.631
+      },
+      {
+        "cost_mult": 0.5,
+        "sharpe": 0.595
+      },
+      {
+        "cost_mult": 1,
+        "sharpe": 0.559
+      },
+      {
+        "cost_mult": 1.5,
+        "sharpe": 0.524
+      },
+      {
+        "cost_mult": 2,
+        "sharpe": 0.488
+      },
+      {
+        "cost_mult": 3,
+        "sharpe": 0.417
+      },
+      {
+        "cost_mult": 4,
+        "sharpe": 0.345
+      },
+      {
+        "cost_mult": 5,
+        "sharpe": 0.274
+      }
+    ]
+  },
+  "sharpe_extra_delay": 0.5590545345037771,
+  "regime": {
+    "regimes": {
+      "bull": {
+        "days": 3504,
+        "sharpe": 0.5312285079986745,
+        "max_dd": -0.22208165263960666
+      },
+      "bear": {
+        "days": 508,
+        "sharpe": 1.1001289259967728,
+        "max_dd": -0.11305755111685745
+      },
+      "sideways": {
+        "days": 492,
+        "sharpe": 0.3154056755785341,
+        "max_dd": -0.12707640283195676
+      }
+    },
+    "regimes_positive": 3,
+    "regimes_present": 3,
+    "worst_regime_dd": -0.22208165263960666,
+    "years": {
+      "2012": -1.5611167356018223,
+      "2013": 1.6973759190311666,
+      "2014": 1.2488071761864104,
+      "2015": -0.06240757859035879,
+      "2016": 0.6882714317928407,
+      "2017": 2.391155075923744,
+      "2018": -0.6470358304863165,
+      "2019": 2.026921199957122,
+      "2020": -0.5224798992226954,
+      "2021": 1.1659950257756801,
+      "2022": -1.0664585728266545,
+      "2023": 1.7121382450297689,
+      "2024": 1.4405352858381055,
+      "2025": 0.8575759469332703
+    },
+    "years_positive_fraction": 0.6428571428571429
+  },
+  "bootstrap": {
+    "n": 10000,
+    "sharpe_p5": 0.12411402411850207,
+    "sharpe_p50": 0.5650993481626949,
+    "sharpe_p95": 1.0211782805803002,
+    "dd_p95": -0.4188902848146666,
+    "dd_p99": -0.5041833434895477,
+    "underwater_streak_p95_days": 3030.0499999999993,
+    "losing_streak_p95_days": 8.0
+  },
+  "purge_days": 90,
+  "embargo_fraction": 0.010083449235048678,
+  "n_trades": 278,
+  "max_horizon_days": 42.0,
+  "capacity": {
+    "note": "liquid US ETFs"
+  },
+  "capacity_p95": 0.0,
+  "pit_universe": true,
+  "market_neutral": false,
+  "benchmark_note": "R7 'btc_buy_hold' slot = SPY buy&hold for this family",
+  "payoff_dev_oos": {
+    "skew": -0.8681399962802718,
+    "win_rate": 0.500592768227623,
+    "payoff_ratio": 1.1168842467632176,
+    "top5pct_profit_share": 3.2801428471164,
+    "n_active_days": 3374
+  },
+  "payoff_holdout": {
+    "skew": 0.29492098653952725,
+    "win_rate": 0.49280575539568344,
+    "payoff_ratio": 1.2288847329776713,
+    "top5pct_profit_share": 2.2754670571582047,
+    "n_active_days": 278
+  },
+  "years_vs_spy_dev": {
+    "2013": {
+      "strat": 0.15853471413287745,
+      "spy": 0.3230769626132859,
+      "excess": -0.16454224848040844
+    },
+    "2014": {
+      "strat": 0.12724075200112606,
+      "spy": 0.13463821692488342,
+      "excess": -0.007397464923757369
+    },
+    "2015": {
+      "strat": -0.016652238877173264,
+      "spy": -0.013739922830544926,
+      "excess": -0.002912316046628338
+    },
+    "2016": {
+      "strat": 0.06391645799286372,
+      "spy": 0.11997861882447514,
+      "excess": -0.05606216083161142
+    },
+    "2017": {
+      "strat": 0.11981257043273263,
+      "spy": 0.1635845856108722,
+      "excess": -0.043772015178139556
+    },
+    "2018": {
+      "strat": -0.08623098727875333,
+      "spy": -0.08366734936927778,
+      "excess": -0.002563637909475558
+    },
+    "2019": {
+      "strat": 0.23583557168987102,
+      "spy": 0.3122384595858838,
+      "excess": -0.0764028878960128
+    },
+    "2020": {
+      "strat": -0.1187118123216373,
+      "spy": 0.04753323019127853,
+      "excess": -0.16624504251291583
+    },
+    "2021": {
+      "strat": 0.11335978282154802,
+      "spy": 0.2872873593565386,
+      "excess": -0.17392757653499058
+    },
+    "2022": {
+      "strat": -0.12351410627710546,
+      "spy": -0.18175344015320238,
+      "excess": 0.05823933387609692
+    },
+    "2023": {
+      "strat": 0.16308802710618875,
+      "spy": 0.25443760229507495,
+      "excess": -0.0913495751888862
+    },
+    "2024": {
+      "strat": 0.1507593396449025,
+      "spy": 0.2488646792633138,
+      "excess": -0.09810533961841128
+    }
+  },
+  "spy_oos_metrics": {
+    "n_days": 4504,
+    "sr_daily": 0.042293204332533585,
+    "sharpe": 0.8080105342385114,
+    "ann_ret": 0.13195374567787632,
+    "ann_vol": 0.17170875350455927,
+    "max_dd": -0.3371726551549341,
+    "cvar5": -0.02263070022462335,
+    "skew": -0.319829015656393,
+    "kurt": 25.563378168965308,
+    "total_ret": 3.6156319915116697,
+    "pct_days_active": 0.6856127886323268
+  },
+  "vault": {
+    "status": "designer_contaminated",
+    "reason": "Same: the 2025-26 SPY/bond path is known to the designer.",
+    "holdout_sharpe": 0.9320671092513596,
+    "holdout": {
+      "param": {
+        "L": 5,
+        "alt": "IEF"
+      },
+      "sharpe": 0.9320671092513596,
+      "ann_ret": 0.0879787869387747,
+      "max_dd": -0.06429022813552843,
+      "total_ret": 0.0879787869387747,
+      "spy_total_ret": 0.1571313538975727
+    }
+  },
+  "paper": null,
+  "folds": [
+    {
+      "test_start": "2012-10-13",
+      "test_end": "2015-04-01",
+      "param": {
+        "L": 5,
+        "alt": "IEF"
+      },
+      "train_sr_daily": 0.07733043379404783,
+      "oos_sharpe": 0.9608336474506057,
+      "oos_total_ret": 0.2446407178612815,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2015-05-30",
+      "test_end": "2017-11-15",
+      "param": {
+        "L": 5,
+        "alt": "IEF"
+      },
+      "train_sr_daily": 0.07249046680929058,
+      "oos_sharpe": 0.7510937909696324,
+      "oos_total_ret": 0.194127492982878,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2018-01-13",
+      "test_end": "2020-06-30",
+      "param": {
+        "L": 5,
+        "alt": "IEF"
+      },
+      "train_sr_daily": 0.059247747272246146,
+      "oos_sharpe": 0.11487688150044997,
+      "oos_total_ret": 0.013014439035204273,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2020-08-28",
+      "test_end": "2023-02-14",
+      "param": {
+        "L": 63,
+        "alt": "IEF"
+      },
+      "train_sr_daily": 0.03789723263376802,
+      "oos_sharpe": 0.17189422712658964,
+      "oos_total_ret": 0.033522482890107286,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2023-04-14",
+      "test_end": "2025-09-30",
+      "param": {
+        "L": 5,
+        "alt": "IEF"
+      },
+      "train_sr_daily": 0.04448076055716481,
+      "oos_sharpe": 1.064630035930061,
+      "oos_total_ret": 0.38205284723565147,
+      "selector": "plateau"
+    }
+  ],
+  "oos_window": [
+    "2012-10-13",
+    "2025-09-30"
+  ],
+  "dev_end": "2025-10-01",
+  "elapsed_s": 7.7,
+  "verdict": {
+    "verdict": "KILL",
+    "checks": {
+      "R1": {
+        "pass": true,
+        "value": 6,
+        "threshold": "<= 50 variants, before data",
+        "note": ""
+      },
+      "R2": {
+        "pass": true,
+        "value": {
+          "N_global": 1696,
+          "N_family": 14
+        },
+        "threshold": "every variant of the family is in the registry",
+        "note": ""
+      },
+      "R3": {
+        "pass": false,
+        "value": "designer_contaminated",
+        "threshold": "opened once, clean, holdout SR > 0",
+        "note": "Same: the 2025-26 SPY/bond path is known to the designer."
+      },
+      "R4": {
+        "pass": true,
+        "value": "5/5",
+        "threshold": ">= 5 folds, >= 80% positive, purge>=horizon",
+        "note": ""
+      },
+      "R5": {
+        "pass": false,
+        "value": 0.0,
+        "threshold": ">= 0.95",
+        "note": ""
+      },
+      "R6": {
+        "pass": false,
+        "value": 0.39184149184149186,
+        "threshold": "<= 0.25",
+        "note": ""
+      },
+      "R7": {
+        "pass": false,
+        "value": {
+          "btc_buy_hold": 1.0,
+          "cash": 0.1215
+        },
+        "threshold": "p <= 0.05 vs all",
+        "note": ""
+      },
+      "R8": {
+        "pass": true,
+        "value": {
+          "n_days": 4504,
+          "min_trl_days": 3270,
+          "n_trades": 278
+        },
+        "threshold": "n_days >= MinTRL and trades >= 200",
+        "note": ""
+      },
+      "R9": {
+        "pass": false,
+        "value": 0.5,
+        "threshold": ">= 0.7 of neighbours keep 70% SR; plateau-centre selection",
+        "note": ""
+      },
+      "R10": {
+        "pass": false,
+        "value": {
+          "breakeven_x": 8.87,
+          "sharpe_2x": 0.49
+        },
+        "threshold": "breakeven >= 3.0x, SR@2x > 0.5",
+        "note": ""
+      },
+      "R11": {
+        "pass": true,
+        "value": 1.0,
+        "threshold": ">= 70% SR kept with +1 bar delay",
+        "note": ""
+      },
+      "R12": {
+        "pass": false,
+        "value": {
+          "regimes_pos": "3/3",
+          "years_pos": 0.64,
+          "worst_dd": -0.222
+        },
+        "threshold": ">=2/3 regimes SR>0, >=75% years, worst regime DD >= -30%",
+        "note": ""
+      },
+      "R13": {
+        "pass": false,
+        "value": {
+          "sr_p5": 0.12,
+          "dd_p95": -0.419,
+          "lose_streak_p95_d": 8.0
+        },
+        "threshold": "p5 SR > 0, p95 DD >= -35%, p95 losing streak tolerable",
+        "note": ""
+      },
+      "R14": {
+        "pass": true,
+        "value": {
+          "manifest": true,
+          "pit": true,
+          "adv_p95": 0.0
+        },
+        "threshold": "manifest + PIT universe + <= 1% ADV",
+        "note": ""
+      },
+      "R15": {
+        "pass": false,
+        "value": "no paper track",
+        "threshold": ">= 90d or 100 trades paper, SR >= 50% OOS, inside CI",
+        "note": ""
+      }
+    },
+    "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7",
+    "rules_version": 2,
+    "failed": [
+      "R3",
+      "R5",
+      "R6",
+      "R7",
+      "R9",
+      "R10",
+      "R12",
+      "R13",
+      "R15"
+    ]
+  },
+  "verdict_aggressive": {
+    "verdict": "KILL",
+    "checks": {
+      "R1": {
+        "pass": true,
+        "value": 6,
+        "threshold": "<= 50 variants, before data",
+        "note": ""
+      },
+      "R2": {
+        "pass": true,
+        "value": {
+          "N_global": 1696,
+          "N_family": 14
+        },
+        "threshold": "every variant of the family is in the registry",
+        "note": ""
+      },
+      "R3": {
+        "pass": false,
+        "value": "designer_contaminated",
+        "threshold": "opened once, clean, holdout SR > 0",
+        "note": "Same: the 2025-26 SPY/bond path is known to the designer."
+      },
+      "R4": {
+        "pass": true,
+        "value": "5/5",
+        "threshold": ">= 5 folds, >= 80% positive, purge>=horizon",
+        "note": ""
+      },
+      "R5": {
+        "pass": false,
+        "value": 0.0,
+        "threshold": ">= 0.95",
+        "note": ""
+      },
+      "R6": {
+        "pass": false,
+        "value": 0.39184149184149186,
+        "threshold": "<= 0.25",
+        "note": ""
+      },
+      "R7": {
+        "pass": false,
+        "value": {
+          "btc_buy_hold": 1.0,
+          "cash": 0.1215
+        },
+        "threshold": "p <= 0.05 vs all",
+        "note": ""
+      },
+      "R8": {
+        "pass": true,
+        "value": {
+          "n_days": 4504,
+          "min_trl_days": 3270,
+          "n_trades": 278
+        },
+        "threshold": "n_days >= MinTRL and trades >= 200",
+        "note": ""
+      },
+      "R9": {
+        "pass": false,
+        "value": 0.5,
+        "threshold": ">= 0.7 of neighbours keep 70% SR; plateau-centre selection",
+        "note": ""
+      },
+      "R10": {
+        "pass": false,
+        "value": {
+          "breakeven_x": 8.87,
+          "sharpe_2x": 0.49
+        },
+        "threshold": "breakeven >= 3.0x, SR@2x > 0.5",
+        "note": ""
+      },
+      "R11": {
+        "pass": true,
+        "value": 1.0,
+        "threshold": ">= 70% SR kept with +1 bar delay",
+        "note": ""
+      },
+      "R12": {
+        "pass": false,
+        "value": {
+          "regimes_pos": "3/3",
+          "years_pos": 0.64,
+          "worst_dd": -0.222
+        },
+        "threshold": ">=2/3 regimes SR>0, >=75% years, worst regime DD >= -30%",
+        "note": ""
+      },
+      "R13": {
+        "pass": true,
+        "value": {
+          "sr_p5": 0.12,
+          "dd_p95": -0.419,
+          "lose_streak_p95_d": 8.0
+        },
+        "threshold": "p5 SR > 0, p95 DD >= -35%, p95 losing streak tolerable",
+        "note": ""
+      },
+      "R14": {
+        "pass": true,
+        "value": {
+          "manifest": true,
+          "pit": true,
+          "adv_p95": 0.0
+        },
+        "threshold": "manifest + PIT universe + <= 1% ADV",
+        "note": ""
+      },
+      "R15": {
+        "pass": false,
+        "value": "no paper track",
+        "threshold": ">= 90d or 100 trades paper, SR >= 50% OOS, inside CI",
+        "note": ""
+      }
+    },
+    "rules_sha": "62a0944a2d8d2fabae6043c79f0c2b10734b14944650eefb08e883731099ee2a",
+    "rules_version": 2,
+    "failed": [
+      "R3",
+      "R5",
+      "R6",
+      "R7",
+      "R9",
+      "R10",
+      "R12",
+      "R15"
+    ]
+  }
+}
