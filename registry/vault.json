@@ -6,8 +6,8 @@
       "families": "*",
       "data_sha": null,
       "sealed_at": 1791869613.836068,
-      "validator_sha": "d15b752d46f0678d79adc99e1126874d249b3723f363af6467fe7642bb29ec8a",
-      "rules_sha": "74ab59bc85f1af5d63543f432fd4518c96a6c50ae56eb922f87416ae0a9fc5e6"
+      "validator_sha": "81ce977a4705ddea3385e092fc136d156c2b958af4d279402a957487a8a2bb73",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
     },
     "holdout_2025-10": {
       "start": "2025-10-01",
@@ -20,8 +20,21 @@
       ],
       "data_sha": null,
       "sealed_at": 1791873303.2719054,
-      "validator_sha": "d15b752d46f0678d79adc99e1126874d249b3723f363af6467fe7642bb29ec8a",
-      "rules_sha": "74ab59bc85f1af5d63543f432fd4518c96a6c50ae56eb922f87416ae0a9fc5e6"
+      "validator_sha": "81ce977a4705ddea3385e092fc136d156c2b958af4d279402a957487a8a2bb73",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
+    },
+    "holdout_2025-10_edge": {
+      "start": "2025-10-01",
+      "end": "2026-10-01",
+      "families": [
+        "E1_funding_carry_xs",
+        "E2_reversal_volshock_xs",
+        "E3_taker_flow_xs"
+      ],
+      "data_sha": null,
+      "sealed_at": 1791880563.1090748,
+      "validator_sha": "81ce977a4705ddea3385e092fc136d156c2b958af4d279402a957487a8a2bb73",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
     }
   },
   "families": {
