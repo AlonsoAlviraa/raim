@@ -1,0 +1,28 @@
+family: B3_credit_spread_trend
+retroactive: false
+hypothesis: >
+  When the corporate credit spread (Moody's Baa minus 10y Treasury, FRED BAA10Y) is above its N-day
+  moving average (credit deteriorating), equity forward returns are worse per unit risk: hold alt;
+  otherwise hold SPY.
+mechanism: >
+  Credit spreads embed default risk and risk appetite and widen before/along equity drawdowns
+  (Gilchrist & Zakrajsek AER 2012 excess bond premium predicts activity; Merton structural link;
+  practitioner credit-trend timing). Counter: stocks often lead credit at short horizons (Amadeus 2022).
+signal: >
+  x_t = BAA10Y value of day t-1 (FRED publishes with a lag; no revisions for market rates);
+  if x > SMA_N(x) hold alt (BIL or IEF) else SPY; evaluated daily; fills next open.
+  (ICE BofA HY OAS BAMLH0A0HYM2 is truncated to 3y on FRED since 2023 -> not usable.)
+universe: SPY, BIL, IEF; signal FRED BAA10Y
+data: Yahoo chart API + FRED fredgraph csv, downloaded AFTER this commit; dev 2010-01-01..2025-10-01
+costs: 2 bps per side
+market_neutral: false
+benchmark_r7: SPY buy&hold + cash
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml (base)
+grid:
+  - {N: 50, alt: BIL}
+  - {N: 100, alt: BIL}
+  - {N: 200, alt: BIL}
+  - {N: 50, alt: IEF}
+  - {N: 100, alt: IEF}
+  - {N: 200, alt: IEF}

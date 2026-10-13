@@ -1,0 +1,25 @@
+family: B2_corp_bond_slope
+retroactive: false
+hypothesis: >
+  The term-structure slope of corporate-bond RETURNS (long-maturity minus short-maturity IG corporate
+  bond ETF return over L days) predicts aggregate stock returns: positive slope -> hold SPY, else alt.
+mechanism: >
+  Informed trading in corporate bonds + market segmentation (Li, Yuan & Zhou, SSRN 4374753, 2024:
+  bond return slope predicts stock market returns in- and out-of-sample).
+signal: >
+  slope = r(VCLT, L) - r(VCSH, L); if slope > 0 hold 100% SPY else 100% alt (BIL or IEF);
+  evaluated every 5 trading days; fills next open.
+universe: SPY, VCLT, VCSH, BIL, IEF (Yahoo daily adjusted)
+data: Yahoo chart API daily, downloaded AFTER this commit; dev 2010-01-01..2025-10-01
+costs: 2 bps per side
+market_neutral: false
+benchmark_r7: SPY buy&hold + cash (the repo's btc_buy_hold slot is filled with SPY for this family)
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml (base)
+grid:
+  - {L: 5, alt: BIL}
+  - {L: 21, alt: BIL}
+  - {L: 63, alt: BIL}
+  - {L: 5, alt: IEF}
+  - {L: 21, alt: IEF}
+  - {L: 63, alt: IEF}

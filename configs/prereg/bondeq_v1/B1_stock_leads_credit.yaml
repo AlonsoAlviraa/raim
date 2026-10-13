@@ -1,0 +1,26 @@
+family: B1_stock_leads_credit
+retroactive: false
+hypothesis: >
+  Equity returns lead corporate-bond (HY) ETF returns: after SPY rises (falls) over the last k days,
+  the rate-hedged HY credit leg (long HYG / short IEF) earns positive (negative) next-day returns.
+mechanism: >
+  Gradual information diffusion stocks -> corporate bonds; bond-ETF prices adjust slowly (Jiang, Li &
+  Xiao, SSRN 4938752, 2024: bond-issuer stocks predict corporate bond ETF returns, not vice versa;
+  Amadeus 1988-2022: S&P returns lead HY spread changes at 1-2 days).
+signal: >
+  s = SPY close-to-close return over last k days; mode both: w = sign(s) * (+0.5 HYG, -0.5 IEF);
+  long_only: only when s > 0. Rebalance daily; fills at next open (+1 bar delay).
+universe: SPY (signal), HYG, IEF (traded). Yahoo daily OHLC adjusted.
+data: Yahoo Finance chart API daily (adjusted for dividends), downloaded AFTER this commit; dev 2010-01-01..2025-10-01
+costs: 2 bps per side per ETF leg; borrow 0.5%/yr on short IEF, 1.0%/yr on short HYG; cash earns 0 (conservative)
+market_neutral: true
+benchmark_r7: cash (dollar-neutral relative-value credit book; residual equity beta reported)
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml (base); aggressive profile reported only if DD binds
+grid:
+  - {k: 1, mode: both}
+  - {k: 3, mode: both}
+  - {k: 5, mode: both}
+  - {k: 1, mode: long_only}
+  - {k: 3, mode: long_only}
+  - {k: 5, mode: long_only}
