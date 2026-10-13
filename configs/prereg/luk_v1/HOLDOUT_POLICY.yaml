@@ -1,0 +1,11 @@
+# luk-v1 holdout decision, written BEFORE downloading any S&P 500 / Yahoo / FRED data.
+window: ["2025-10-01", "2026-10-01"]
+seal: holdout_2025-10_luk
+use: one_shot diagnostic (frozen plateau-centre parameter, Vault.open_once per family)
+families:
+  L1_luk_pullback_daily:
+    r3_status: designer_contaminated
+    reason: >
+      Designer knows the 2025-26 equity tape and selected the Martin Luk pullback strategy specifically
+      because Luk won USIC 2025 (+969.8%) and led 2026 (+844.5% through Aug 2026) during this period.
+user_gate: "beat SPY by >= 3pp in >= 2 of 4 calendar years (reported, research gate only)"
