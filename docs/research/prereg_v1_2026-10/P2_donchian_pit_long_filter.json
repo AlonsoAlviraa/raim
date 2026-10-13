@@ -1,0 +1,362 @@
+{
+  "name": "P2_donchian_pit_long_filter",
+  "family": "P2_donchian_pit_long_filter",
+  "prereg_sha": "47265a58d63fa273337631a26709dcf71ddd0bc9ac8d4343da443e8b1bf51e77",
+  "prereg_check": {
+    "ok": true,
+    "registered_ts": 1791873297.1012263,
+    "retroactive": false,
+    "n_variants": 8,
+    "before_first_trial": true,
+    "reason": "",
+    "git_commit_ts": 1791873303.0,
+    "commit_before_first_trial": true
+  },
+  "data_manifest_sha": "b137d144f034f1d321c9c7ccefc08576de85ce5da749721d492508336d2ca8a2",
+  "registry_path": "/workspace/raim-strategies/reports/strategies/trials.jsonl",
+  "oos": {
+    "n_days": 1148,
+    "sr_daily": 0.018987902632667225,
+    "sharpe": 0.36276337043793794,
+    "ann_ret": 0.02405938143252273,
+    "ann_vol": 0.07285530807826306,
+    "max_dd": -0.10293873366362571,
+    "cvar5": -0.009786296329699259,
+    "skew": -0.3440684801968336,
+    "kurt": 10.29476243767618,
+    "total_ret": 0.077642444836171,
+    "pct_days_active": 0.9137630662020906,
+    "turnover_ann": 5.375924477177029,
+    "cost_ann": 0.009500330528373607,
+    "funding_ann": 0.0,
+    "gross_ann": 0.03592956764113863,
+    "folds_positive": 2,
+    "n_folds": 5
+  },
+  "pbo": 0.7070707070707071,
+  "spa": {
+    "btc_buy_hold": 1.0,
+    "cash": 0.435
+  },
+  "plateau_stability": 1.0,
+  "selector": "plateau",
+  "n_variants": 8,
+  "costs": {
+    "breakeven_multiple": 3.7819281691128213,
+    "sharpe_at_stress": 0.23244942690188633,
+    "curve": [
+      {
+        "cost_mult": 0,
+        "sharpe": 0.493
+      },
+      {
+        "cost_mult": 0.5,
+        "sharpe": 0.428
+      },
+      {
+        "cost_mult": 1,
+        "sharpe": 0.363
+      },
+      {
+        "cost_mult": 1.5,
+        "sharpe": 0.298
+      },
+      {
+        "cost_mult": 2,
+        "sharpe": 0.232
+      },
+      {
+        "cost_mult": 3,
+        "sharpe": 0.102
+      },
+      {
+        "cost_mult": 4,
+        "sharpe": -0.028
+      },
+      {
+        "cost_mult": 5,
+        "sharpe": -0.159
+      }
+    ]
+  },
+  "sharpe_extra_delay": 0.5493328421280712,
+  "regime": {
+    "regimes": {
+      "bull": {
+        "days": 740,
+        "sharpe": 0.8920242151703506,
+        "max_dd": -0.07545057595041194
+      },
+      "bear": {
+        "days": 243,
+        "sharpe": -1.8911789197433946,
+        "max_dd": -0.05443449233036035
+      },
+      "sideways": {
+        "days": 165,
+        "sharpe": -2.005131803773192,
+        "max_dd": -0.027405842238086064
+      }
+    },
+    "regimes_positive": 1,
+    "regimes_present": 3,
+    "worst_regime_dd": -0.07545057595041194,
+    "years": {
+      "2022": -2.3348583074917784,
+      "2023": 1.4312328010374291,
+      "2024": 0.4371228524448149,
+      "2025": 0.037516344818091615
+    },
+    "years_positive_fraction": 0.75
+  },
+  "bootstrap": {
+    "n": 10000,
+    "sharpe_p5": -0.7292936273160281,
+    "sharpe_p50": 0.33699306308222066,
+    "sharpe_p95": 1.3821133482185726,
+    "dd_p95": -0.2122009495300718,
+    "dd_p99": -0.2558871893804294,
+    "underwater_streak_p95_days": 1131.0,
+    "losing_streak_p95_days": 9.0
+  },
+  "purge_days": 90,
+  "embargo_fraction": 0.0103866128101558,
+  "n_trades": 1669,
+  "max_horizon_days": 40.59999999998843,
+  "capacity": {
+    "p95": 9.199159337730157e-06,
+    "max": 0.0002029844277861617,
+    "median": 6.344050483753168e-08,
+    "n_obs": 19480,
+    "missing": []
+  },
+  "capacity_p95": 9.199159337730157e-06,
+  "pit_universe": true,
+  "vault": {
+    "status": "designer_contaminated",
+    "reason": "These families never ran on this window, but they were DESIGNED by an agent that had already seen how their ancestors (C6, S3/C7) behaved on it (e.g. C6 2025-26 fold negative, bear losses). The rules doc (section C, separation of roles) says the proposer must not see the vault. So the window is a useful one-shot check, but not a clean R3 vault: R3 is scored FAIL, ceiling = WATCH. A clean R3 is only possible with the future vault 2026-10-13 -> 2027-10-13.",
+    "holdout_sharpe": -0.23394496726844818,
+    "holdout": {
+      "param": {
+        "N": 20,
+        "tv": 0.25,
+        "filter": "none"
+      },
+      "sharpe": -0.23394496726844818,
+      "ann_ret": -0.011970997138393447,
+      "max_dd": -0.0742834545230604,
+      "total_ret": -0.011970997138393447,
+      "btc_bh_total_ret": -0.2681110532966101,
+      "btc_bh_sharpe": -0.4697475972085688,
+      "days": 365
+    }
+  },
+  "paper": null,
+  "folds": [
+    {
+      "test_start": "2022-05-30",
+      "test_end": "2023-01-13",
+      "param": {
+        "N": 50,
+        "tv": 0.25,
+        "filter": "none"
+      },
+      "train_sr_daily": 0.03092813737419829,
+      "oos_sharpe": -1.6310415966372416,
+      "oos_total_ret": -0.03930661851128969,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2023-02-01",
+      "test_end": "2023-09-18",
+      "param": {
+        "N": 20,
+        "tv": 0.25,
+        "filter": "btc200"
+      },
+      "train_sr_daily": -0.0014833353927158968,
+      "oos_sharpe": -1.9563807968031315,
+      "oos_total_ret": -0.059911062719076646,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2023-10-07",
+      "test_end": "2024-05-22",
+      "param": {
+        "N": 20,
+        "tv": 0.25,
+        "filter": "none"
+      },
+      "train_sr_daily": -0.014180502984010189,
+      "oos_sharpe": 2.588425323089962,
+      "oos_total_ret": 0.19586458772065374,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2024-06-10",
+      "test_end": "2025-01-25",
+      "param": {
+        "N": 20,
+        "tv": 0.25,
+        "filter": "btc200"
+      },
+      "train_sr_daily": 0.03334957672425025,
+      "oos_sharpe": -0.011200634400399671,
+      "oos_total_ret": -0.0023662727580654463,
+      "selector": "plateau"
+    },
+    {
+      "test_start": "2025-02-13",
+      "test_end": "2025-09-30",
+      "param": {
+        "N": 20,
+        "tv": 0.25,
+        "filter": "none"
+      },
+      "train_sr_daily": 0.018197097876105375,
+      "oos_sharpe": 0.03520432860758647,
+      "oos_total_ret": 0.0001561714066689035,
+      "selector": "plateau"
+    }
+  ],
+  "oos_window": [
+    "2022-05-30",
+    "2025-09-30"
+  ],
+  "dev_end": "2025-10-01",
+  "elapsed_s": 108.2,
+  "verdict": {
+    "verdict": "KILL",
+    "checks": {
+      "R1": {
+        "pass": true,
+        "value": 8,
+        "threshold": "<= 50 variants, before data",
+        "note": ""
+      },
+      "R2": {
+        "pass": true,
+        "value": {
+          "N_global": 1544,
+          "N_family": 18
+        },
+        "threshold": "every variant of the family is in the registry",
+        "note": ""
+      },
+      "R3": {
+        "pass": false,
+        "value": "designer_contaminated",
+        "threshold": "opened once, clean, holdout SR > 0",
+        "note": "These families never ran on this window, but they were DESIGNED by an agent that had already seen how their ancestors (C6, S3/C7) behaved on it (e.g. C6 2025-26 fold negative, bear losses). The rules doc (section C, separation of roles) says the proposer must not see the vault. So the window is a useful one-shot check, but not a clean R3 vault: R3 is scored FAIL, ceiling = WATCH. A clean R3 is only possible with the future vault 2026-10-13 -> 2027-10-13."
+      },
+      "R4": {
+        "pass": false,
+        "value": "2/5",
+        "threshold": ">= 5 folds, >= 80% positive, purge>=horizon",
+        "note": ""
+      },
+      "R5": {
+        "pass": false,
+        "value": 0.0,
+        "threshold": ">= 0.95",
+        "note": ""
+      },
+      "R6": {
+        "pass": false,
+        "value": 0.7070707070707071,
+        "threshold": "<= 0.25",
+        "note": ""
+      },
+      "R7": {
+        "pass": false,
+        "value": {
+          "btc_buy_hold": 1.0,
+          "cash": 0.435
+        },
+        "threshold": "p <= 0.05 vs all",
+        "note": ""
+      },
+      "R8": {
+        "pass": false,
+        "value": {
+          "n_days": 1148,
+          "min_trl_days": 7560,
+          "n_trades": 1669
+        },
+        "threshold": "n_days >= MinTRL and trades >= 200",
+        "note": ""
+      },
+      "R9": {
+        "pass": true,
+        "value": 1.0,
+        "threshold": ">= 0.7 of neighbours keep 70% SR; plateau-centre selection",
+        "note": ""
+      },
+      "R10": {
+        "pass": false,
+        "value": {
+          "breakeven_x": 3.78,
+          "sharpe_2x": 0.23
+        },
+        "threshold": "breakeven >= 3.0x, SR@2x > 0.5",
+        "note": ""
+      },
+      "R11": {
+        "pass": true,
+        "value": 1.51,
+        "threshold": ">= 70% SR kept with +1 bar delay",
+        "note": ""
+      },
+      "R12": {
+        "pass": false,
+        "value": {
+          "regimes_pos": "1/3",
+          "years_pos": 0.75,
+          "worst_dd": -0.075
+        },
+        "threshold": ">=2/3 regimes SR>0, >=75% years, worst regime DD >= -30%",
+        "note": ""
+      },
+      "R13": {
+        "pass": false,
+        "value": {
+          "sr_p5": -0.73,
+          "dd_p95": -0.212,
+          "lose_streak_p95_d": 9.0
+        },
+        "threshold": "p5 SR > 0, p95 DD >= -35%, p95 losing streak tolerable",
+        "note": ""
+      },
+      "R14": {
+        "pass": true,
+        "value": {
+          "manifest": true,
+          "pit": true,
+          "adv_p95": 1e-05
+        },
+        "threshold": "manifest + PIT universe + <= 1% ADV",
+        "note": ""
+      },
+      "R15": {
+        "pass": false,
+        "value": "no paper track",
+        "threshold": ">= 90d or 100 trades paper, SR >= 50% OOS, inside CI",
+        "note": ""
+      }
+    },
+    "rules_sha": "74ab59bc85f1af5d63543f432fd4518c96a6c50ae56eb922f87416ae0a9fc5e6",
+    "rules_version": 1,
+    "failed": [
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R10",
+      "R12",
+      "R13",
+      "R15"
+    ]
+  }
+}

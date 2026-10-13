@@ -16,3 +16,7 @@
 {"ts": 1791869613.836915, "event": "seal", "seal": "vault_2026-10-13", "start": "2026-10-13", "end": "2027-10-13", "families": "*", "data_sha": null, "validator_sha": "d15b752d46f0678d79adc99e1126874d249b3723f363af6467fe7642bb29ec8a", "rules_sha": "74ab59bc85f1af5d63543f432fd4518c96a6c50ae56eb922f87416ae0a9fc5e6"}
 {"ts": 1791869623.312756, "event": "contaminated", "family": "S5_leadlag_1m", "window": ["2024-07-01", "2025-07-01"], "reason": "S5 only has 1m data 2024-07..2025-07; its last 12 months were its walk-forward OOS -> no clean hold-out"}
 {"ts": 1791873303.2777505, "event": "seal", "seal": "holdout_2025-10", "start": "2025-10-01", "end": "2026-10-01", "families": ["P1_alt_tsmom_btc_filter", "P2_donchian_pit_long_filter", "P3_dual_momentum_cash", "P4_majors_trend_cash"], "data_sha": null, "validator_sha": "d15b752d46f0678d79adc99e1126874d249b3723f363af6467fe7642bb29ec8a", "rules_sha": "74ab59bc85f1af5d63543f432fd4518c96a6c50ae56eb922f87416ae0a9fc5e6"}
+{"ts": 1791873349.4254403, "event": "open", "family": "P1_alt_tsmom_btc_filter", "seal": "holdout_2025-10"}
+{"ts": 1791873450.7561116, "event": "open", "family": "P2_donchian_pit_long_filter", "seal": "holdout_2025-10"}
+{"ts": 1791873465.3043, "event": "open", "family": "P3_dual_momentum_cash", "seal": "holdout_2025-10"}
+{"ts": 1791873470.1001287, "event": "open", "family": "P4_majors_trend_cash", "seal": "holdout_2025-10"}

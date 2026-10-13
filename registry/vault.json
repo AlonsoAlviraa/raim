@@ -24,7 +24,28 @@
       "rules_sha": "74ab59bc85f1af5d63543f432fd4518c96a6c50ae56eb922f87416ae0a9fc5e6"
     }
   },
-  "families": {},
+  "families": {
+    "P1_alt_tsmom_btc_filter": {
+      "status": "opened",
+      "seal": "holdout_2025-10",
+      "ts": 1791873349.4249961
+    },
+    "P2_donchian_pit_long_filter": {
+      "status": "opened",
+      "seal": "holdout_2025-10",
+      "ts": 1791873450.7556248
+    },
+    "P3_dual_momentum_cash": {
+      "status": "opened",
+      "seal": "holdout_2025-10",
+      "ts": 1791873465.303843
+    },
+    "P4_majors_trend_cash": {
+      "status": "opened",
+      "seal": "holdout_2025-10",
+      "ts": 1791873470.0996811
+    }
+  },
   "contaminated": {
     "S3_donchian_ensemble": {
       "status": "spent_contaminated",
