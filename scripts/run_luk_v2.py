@@ -90,7 +90,7 @@ def fetch_sec_tickers_and_fsds() -> tuple[pd.DataFrame, dict[int, str], dict]:
         listings and historical delisted/acquired filers from FSDS `instance` filenames.
       - `sec_meta`: summary metadata of SEC FSDS quarters & CIK counts."""
     SEC_DIR.mkdir(parents=True, exist_ok=True)
-    parquet_path = SEC_DIR / "sec_quarterly_fundamentals.parquet"
+    parquet_path = SEC_DIR / "sec_quarterly_fundamentals.csv.gz"
     meta_path = SEC_DIR / "sec_meta.json"
 
     # 1. SEC company_tickers_exchange.json
@@ -113,7 +113,7 @@ def fetch_sec_tickers_and_fsds() -> tuple[pd.DataFrame, dict[int, str], dict]:
             cik_to_sym.setdefault(int(cik), s_clean)
 
     if parquet_path.exists() and meta_path.exists():
-        df_all = pd.read_parquet(parquet_path)
+        df_all = pd.read_csv(parquet_path)
         meta = json.loads(meta_path.read_text())
         for cik_v, s_v in meta.get("historical_fsds_ciks", {}).items():
             cik_to_sym.setdefault(int(cik_v), s_v)
@@ -125,10 +125,10 @@ def fetch_sec_tickers_and_fsds() -> tuple[pd.DataFrame, dict[int, str], dict]:
     all_tags = set(L2.EPS_TAGS) | set(L2.REV_TAGS) | set(L2.OPINC_TAGS) | set(L2.SHARES_TAGS)
 
     def _process_one_quarter(qtr: str) -> tuple[str, pd.DataFrame, dict[int, str]]:
-        q_cache = SEC_DIR / f"parsed_{qtr}.parquet"
+        q_cache = SEC_DIR / f"parsed_{qtr}.csv.gz"
         q_sym_cache = SEC_DIR / f"syms_{qtr}.json"
         if q_cache.exists() and q_sym_cache.exists():
-            return qtr, pd.read_parquet(q_cache), {int(k): v for k, v in json.loads(q_sym_cache.read_text()).items()}
+            return qtr, pd.read_csv(q_cache), {int(k): v for k, v in json.loads(q_sym_cache.read_text()).items()}
 
         url = f"https://www.sec.gov/files/dera/data/financial-statement-data-sets/{qtr}.zip"
         content = b""
@@ -195,7 +195,7 @@ def fetch_sec_tickers_and_fsds() -> tuple[pd.DataFrame, dict[int, str], dict]:
         out_df = base.dropna(subset=["eps", "rev", "opinc", "shares"], how="all").reset_index(drop=True)
         out_df["cik"] = out_df["cik"].astype(int)
 
-        out_df.to_parquet(q_cache, index=False)
+        out_df.to_csv(q_cache, index=False, compression="gzip")
         q_sym_cache.write_text(json.dumps(hist_map))
         return qtr, out_df, hist_map
 
@@ -224,7 +224,7 @@ def fetch_sec_tickers_and_fsds() -> tuple[pd.DataFrame, dict[int, str], dict]:
         "n_historical_fsds_ciks_extracted": len(hist_ciks),
         "historical_fsds_ciks": {str(k): v for k, v in hist_ciks.items()},
     }
-    df_all.to_parquet(parquet_path, index=False)
+    df_all.to_csv(parquet_path, index=False, compression="gzip")
     meta_path.write_text(json.dumps(meta, indent=2))
     return df_all, cik_to_sym, meta
 
@@ -850,7 +850,7 @@ def main() -> None:
         L2.LukV2Config(id="comp_fund_no_mom", rank_mode="fundamentals_only", fund_mode="canonic_eps_rev", catalyst_mode="sue_or_gap"),
     )
     # (c) S&P 500 version of V0
-    filings_df = pd.read_parquet(SEC_DIR / "sec_quarterly_fundamentals.parquet")
+    filings_df = pd.read_csv(SEC_DIR / "sec_quarterly_fundamentals.csv.gz")
     sec_meta = json.loads((SEC_DIR / "sec_meta.json").read_text())
     cik_to_sym = {int(k): v for k, v in sec_meta.get("historical_fsds_ciks", {}).items()}
     cpi_df = pd.read_csv(L1.ROOT / "CPIAUCSL.csv")
@@ -915,7 +915,7 @@ def main() -> None:
         },
         "capacity_p95": round(cap_p95, 6),
         "pit_universe": True,
-        "market_neutral": false_val := False,
+        "market_neutral": False,
         "benchmark_note": "R7 'btc_buy_hold' slot = SPY buy&hold; IWM buy&hold also reported",
         "trade_metrics_wf_oos": wf_oos_trade_metrics,
         "trade_metrics_v0_oos": v0_oos_trade_metrics,

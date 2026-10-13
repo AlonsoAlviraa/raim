@@ -155,6 +155,11 @@
       "status": "opened",
       "seal": "holdout_2025-10_luk",
       "ts": 1791915485.8033764
+    },
+    "L2_luk_smid_mom_fund": {
+      "status": "opened",
+      "seal": "holdout_2025-10_luk_v2",
+      "ts": 1791919995.74808
     }
   },
   "contaminated": {

@@ -1037,7 +1037,7 @@ def parse_yahoo_60m_chart(raw_json: dict) -> pd.DataFrame | None:
                 "high": pd.to_numeric(q.get("high"), errors="coerce"),
                 "low": pd.to_numeric(q.get("low"), errors="coerce"),
                 "close": pd.to_numeric(q.get("close"), errors="coerce"),
-                "volume": pd.to_numeric(q.get("volume"), errors="coerce").fillna(0.0),
+                "volume": pd.Series(pd.to_numeric(q.get("volume"), errors="coerce"), index=idx).fillna(0.0).values,
             },
             index=idx,
         )
