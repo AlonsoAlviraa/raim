@@ -1,0 +1,30 @@
+family: X3_funding_shock_conditional
+retroactive: false
+hypothesis: >
+  Extreme NEGATIVE funding is a conditional signal: on an UP day (shorts squeezed while crowded) the coin
+  keeps rising (reversal of the crowding); on a DOWN day it keeps falling (continuation).
+mechanism: >
+  Conditional arbitrage capacity (Shek, SSRN 7520320, Sep 2026: 274 events BTC/ETH/SOL 2021-26, up-day
+  +1.88% / down-day -1.74% over 24h, bootstrap CI [2.60,4.67]); nonlinear negative-tail funding
+  information (AIJMR 2026, +0.49pp 24h after extreme negative funding). Counter-evidence: markettrace
+  2024-26 (no unconditional edge), Stratmill (decayed after 2023).
+signal: >
+  event on coin i at day t: daily funding sum <= its own trailing-90d `p` quantile AND < 0; up day =
+  return_t > 0. long_up: go long on up-day events only; both: long on up-day, short on down-day events.
+  Hold `H` days; each open event weight 1/10, gross capped at 1 (pro-rata).
+universe: PIT top-60 Binance USDT-M perps (incl. delisted), >= 90d funding history
+data: existing perp 1d klines + fundingRate; dev < 2025-10-01; never >= 2026-10-13
+costs: VIP0 perp taker 5 bps + tiered slippage; funding paid/received
+market_neutral: false
+benchmark_r7: btc_buy_hold + cash
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules_aggressive.yaml (user DD profile -70%)
+grid:
+  - {p: 0.02, H: 1, mode: long_up}
+  - {p: 0.02, H: 3, mode: long_up}
+  - {p: 0.05, H: 1, mode: long_up}
+  - {p: 0.05, H: 3, mode: long_up}
+  - {p: 0.02, H: 1, mode: both}
+  - {p: 0.02, H: 3, mode: both}
+  - {p: 0.05, H: 1, mode: both}
+  - {p: 0.05, H: 3, mode: both}

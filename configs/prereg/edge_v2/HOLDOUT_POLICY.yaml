@@ -1,0 +1,17 @@
+# edge-v2 holdout decision, written BEFORE downloading premiumIndexKlines and before any edge-v2 run.
+window: ["2025-10-01", "2026-10-01"]
+seal: holdout_2025-10_edge2
+use: one_shot diagnostic (frozen plateau-centre parameter from dev, Vault.open_once per family)
+rules: configs/research_rules_aggressive.yaml (user risk profile; only DD limits differ)
+families:
+  X1_basis_xs:
+    r3_status: designer_contaminated
+    reason: >
+      Premium-index data is new, but basis is mechanically tied to funding, and the designer knows E1
+      (long LOW funding / short HIGH) returned +64% on this window -> informative about this family.
+  X2_flow_breakout_convex:
+    r3_status: designer_contaminated
+    reason: Uses perp prices and taker flow already opened on this window by E3 (and spot prices by P1-P4).
+  X3_funding_shock_conditional:
+    r3_status: designer_contaminated
+    reason: Funding already loaded on this window (E1) and the source paper (Shek 2026) reports results through 2026.

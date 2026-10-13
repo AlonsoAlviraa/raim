@@ -35,6 +35,19 @@
       "sealed_at": 1791880563.1090748,
       "validator_sha": "81ce977a4705ddea3385e092fc136d156c2b958af4d279402a957487a8a2bb73",
       "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
+    },
+    "holdout_2025-10_edge2": {
+      "start": "2025-10-01",
+      "end": "2026-10-01",
+      "families": [
+        "X1_basis_xs",
+        "X2_flow_breakout_convex",
+        "X3_funding_shock_conditional"
+      ],
+      "data_sha": null,
+      "sealed_at": 1791898815.1332016,
+      "validator_sha": "ca6d056fe6ae7e73798cd899551342aec10b212236da4bc978e7dabbaa8fdabd",
+      "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"
     }
   },
   "families": {
