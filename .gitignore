@@ -17,4 +17,6 @@ dist/
 *.parquet
 recordings/
 .pytest_cache/
+data_hist/
+uv.lock
 !registry/*.jsonl

@@ -35,3 +35,4 @@
 {"ts": 1791911720.6067193, "event": "open", "family": "B2_corp_bond_slope", "seal": "holdout_2025-10_bondeq"}
 {"ts": 1791911727.6991675, "event": "open", "family": "B3_credit_spread_trend", "seal": "holdout_2025-10_bondeq"}
 {"ts": 1791914633.7005322, "event": "seal", "seal": "holdout_2025-10_luk", "start": "2025-10-01", "end": "2026-10-01", "families": ["L1_luk_pullback_daily"], "data_sha": null, "validator_sha": "ca6d056fe6ae7e73798cd899551342aec10b212236da4bc978e7dabbaa8fdabd", "rules_sha": "5fe6c597e562d9c8743b02739c40da3ce02ab59f8c42d273f838383e8f1313b7"}
+{"ts": 1791915485.8039076, "event": "open", "family": "L1_luk_pullback_daily", "seal": "holdout_2025-10_luk"}

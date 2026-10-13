@@ -12,10 +12,12 @@ from __future__ import annotations
 
 import concurrent.futures
 import hashlib
+import io
 import json
 import logging
 import math
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -89,14 +91,25 @@ def download_cpi() -> Path:
     target = DATA_DIR / "CPIAUCSL.csv"
     if target.exists() and target.stat().st_size > 1_000:
         return target
-    url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL"
+    url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL&cosd=1998-01-01"
     log.info("Downloading CPIAUCSL from FRED...")
-    with httpx.Client(headers=HEADERS, timeout=30.0, follow_redirects=True) as client:
-        resp = client.get(url)
-        resp.raise_for_status()
-        df = pd.read_csv(pd.io.common.BytesIO(resp.content))
-        df.columns = ["date", "value"]
-        df.to_csv(target, index=False)
+    raw_bytes = b""
+    try:
+        r = subprocess.run(["curl", "-sL", "--max-time", "15", url], capture_output=True, check=True)
+        if b"," in r.stdout and len(r.stdout) > 500:
+            raw_bytes = r.stdout
+    except Exception:
+        pass
+    if not raw_bytes:
+        fb_url = "https://raw.githubusercontent.com/datasets/cpi-us/main/data/cpiai.csv"
+        with httpx.Client(headers=HEADERS, timeout=20.0, follow_redirects=True) as client:
+            resp = client.get(fb_url)
+            resp.raise_for_status()
+            raw_bytes = resp.content
+    df = pd.read_csv(io.BytesIO(raw_bytes))
+    df = df.iloc[:, :2].copy()
+    df.columns = ["date", "value"]
+    df.to_csv(target, index=False)
     return target
 
 
