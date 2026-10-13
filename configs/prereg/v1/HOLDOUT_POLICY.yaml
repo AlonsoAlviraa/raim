@@ -1,0 +1,16 @@
+# Decision on the 2025-10-01 -> 2026-10-01 window for prereg-v1 families (written BEFORE any run).
+window: ["2025-10-01", "2026-10-01"]
+use: one_shot_holdout
+families: [P1_alt_tsmom_btc_filter, P2_donchian_pit_long_filter, P3_dual_momentum_cash, P4_majors_trend_cash]
+procedure: >
+  Development + walk-forward use ONLY dates < 2025-10-01. After the dev verdict, the parameter is
+  frozen (plateau centre on the full development sample) and each family's holdout is opened ONCE
+  via Vault.open_once (seal "holdout_2025-10"); its result is reported but never used to change
+  anything. The sealed future vault (2026-10-13+) is not touched.
+r3_status: designer_contaminated
+reason: >
+  These families never ran on this window, but they were DESIGNED by an agent that had already
+  seen how their ancestors (C6, S3/C7) behaved on it (e.g. C6 2025-26 fold negative, bear losses).
+  The rules doc (section C, separation of roles) says the proposer must not see the vault. So the
+  window is a useful one-shot check, but not a clean R3 vault: R3 is scored FAIL, ceiling = WATCH.
+  A clean R3 is only possible with the future vault 2026-10-13 -> 2027-10-13.
