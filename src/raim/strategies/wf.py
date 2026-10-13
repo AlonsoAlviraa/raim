@@ -12,13 +12,17 @@ import numpy as np
 import pandas as pd
 
 from raim.research.registry import TrialRegistry
+from raim.research.stability import plateau_select
 from raim.research.walkforward import assert_no_leakage, purged_walk_forward
 from raim.strategies.engine import BTResult, metrics
 
 
 def walk_forward(strategy: str, grid: list[dict], evaluate: Callable[[dict], BTResult],
                  registry: TrialRegistry, n_folds: int = 5, purge_days: int = 30,
-                 embargo_days: int = 7, min_train_days: int = 180) -> dict:
+                 embargo_days: int = 7, min_train_days: int = 180,
+                 selector: str = "plateau", min_embargo_frac: float = 0.0) -> dict:
+    """selector='plateau' (R9, default): centre of the best parameter plateau on the TRAIN
+    window; 'argmax' reproduces the legacy round-1/2 behaviour."""
     results: dict[int, BTResult] = {}
     for k, p in enumerate(grid):
         r = evaluate(p)
@@ -29,21 +33,32 @@ def walk_forward(strategy: str, grid: list[dict], evaluate: Callable[[dict], BTR
     for r in results.values():
         idx = idx.union(r.daily.index)
     daily = {k: r.daily.reindex(idx).fillna(0.0) for k, r in results.items()}
-    folds = purged_walk_forward(len(idx), n_folds=n_folds, purge=purge_days,
-                                embargo=embargo_days, min_train=min_train_days)
+    embargo_days = max(embargo_days, int(np.ceil(min_embargo_frac * len(idx))))
+    # R4: guarantee >= n_folds VALID test folds (min_train can drop the first blocks)
+    nf = n_folds
+    while True:
+        folds = purged_walk_forward(len(idx), n_folds=nf, purge=purge_days,
+                                    embargo=embargo_days, min_train=min_train_days)
+        if len(folds) >= n_folds or nf >= n_folds + 10:
+            break
+        nf += 1
     oos_parts, chosen, fold_rows = [], [], []
     for f in folds:
         assert_no_leakage(f, purge_days)
         tr = {k: d.iloc[f.train] for k, d in daily.items()}
         score = {k: (v.mean() / v.std() if v.std() > 0 else -np.inf) for k, v in tr.items()}
-        best = max(score, key=score.get)
+        if selector == "plateau":
+            best = plateau_select([score[k] for k in range(len(grid))], grid)
+        else:
+            best = max(score, key=score.get)
         test = daily[best].iloc[f.test]
         oos_parts.append(test)
         chosen.append(grid[best])
         fm = metrics(test)
         fold_rows.append({"test_start": str(test.index[0].date()), "test_end": str(test.index[-1].date()),
                           "param": grid[best], "train_sr_daily": float(score[best]),
-                          "oos_sharpe": fm["sharpe"], "oos_total_ret": fm["total_ret"]})
+                          "oos_sharpe": fm["sharpe"], "oos_total_ret": fm["total_ret"],
+                          "selector": selector})
     oos = pd.concat(oos_parts).sort_index()
     # bar-level frame for turnover/cost attribution on the OOS dates actually traded
     bars = []
@@ -57,4 +72,5 @@ def walk_forward(strategy: str, grid: list[dict], evaluate: Callable[[dict], BTR
     m["n_folds"] = len(fold_rows)
     registry.record({"strategy": strategy, "stage": "walk_forward_oos"}, m)
     return {"oos_daily": oos, "oos_bar": oos_bar, "metrics": m, "folds": fold_rows,
-            "results": results}
+            "results": results, "grid": grid, "selector": selector, "purge_days": purge_days,
+            "embargo_days": embargo_days, "chosen_idx": [grid.index(p) for p in chosen]}

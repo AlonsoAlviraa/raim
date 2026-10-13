@@ -17,11 +17,12 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from raim.research.registry import TrialRegistry  # noqa: E402
+from raim.research.vault import Vault  # noqa: E402
 from raim.strategies import convex, data, engine, universe  # noqa: E402
 from raim.strategies.convex_metrics import convex_stats, trades  # noqa: E402
 from raim.strategies.costs import STRESS2X, VIP0  # noqa: E402
 from raim.strategies.wf import walk_forward  # noqa: E402
-from run_strategies import RF_ANNUAL, _sr_var, btc_bh  # noqa: E402
+from run_strategies import RF_ANNUAL, _sr_var, btc_bh, rules_verdict_pointer  # noqa: E402
 
 log = logging.getLogger("convex")
 OUT = Path("reports/strategies_convex")
@@ -50,6 +51,7 @@ def oos_trades(res, grid):
 
 def save(name, res, grid, extra=None):
     OUT.mkdir(parents=True, exist_ok=True)
+    Vault().guard(name.replace("_stress2x", ""), res["oos_daily"].index)   # R3: never read the vault
     tr = oos_trades(res, grid) if "trades" not in res else res["trades"]
     cs = convex_stats(tr, res["oos_daily"])
     m = {**res["metrics"], **cs}
@@ -236,6 +238,8 @@ STRATS = {"C1_intraday_tsmom_30m": c1, "C2_donchian_15m": c2, "C3_squeeze_4h": c
 
 
 def summarize(reg):
+    """Descriptive summary only. The VERDICT lives in ONE place, raim.research.verdict, with
+    thresholds in configs/research_rules.yaml (run scripts/rescore_rules.py)."""
     trials = reg.all()
     n, var = len(trials), _sr_var(trials)
     rows = []
@@ -251,10 +255,6 @@ def summarize(reg):
         dfam = engine.dsr(m, len(ft), _sr_var(ft) if len(ft) > 2 else var)
         p0 = engine.psr0(m)
         fp, nf = m.get("folds_positive", 0), max(m.get("n_folds", 1), 1)
-        convex_ok = m["daily_skew"] > 0 and m["payoff"] >= 2
-        verdict = ("PROMOTE" if mx["sharpe"] > 1.0 and d > 0.95 and m["max_dd"] > -0.20
-                   and fp >= 2 / 3 * nf and m["sharpe"] > bh["sharpe"] and convex_ok else
-                   "WATCH" if mx["sharpe"] > 0.5 and p0 > 0.9 and convex_ok else "KILL")
         rows.append({"strategy": j["name"], "oos": f"{oos.index[0].date()}→{oos.index[-1].date()}",
                      "sharpe": round(m["sharpe"], 2), "sharpe_xs_rf4": round(mx["sharpe"], 2),
                      "psr0": round(p0, 3), "dsr_global": round(d, 3), "dsr_family": round(dfam, 3),
@@ -267,7 +267,7 @@ def summarize(reg):
                      "top5_share": round(m["top5pct_share"], 2) if m["top5pct_share"] == m["top5pct_share"] else None,
                      "lose_streak": m["longest_losing_streak"], "ttr_days": m["time_to_recovery_days"],
                      "folds_pos": f"{fp}/{nf}", "btc_sharpe": round(bh["sharpe"], 2),
-                     "btc_dd": round(bh["max_dd"], 3), "verdict": verdict})
+                     "btc_dd": round(bh["max_dd"], 3), "verdict": rules_verdict_pointer})
     df = pd.DataFrame(rows)
     df.to_csv(OUT / "summary.csv", index=False)
     (OUT / "summary.json").write_text(json.dumps({"n_trials_global": n, "sr_var_daily": var,
@@ -284,6 +284,9 @@ def main():
     ap.add_argument("--summary-only", action="store_true")
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
+    vault = Vault()
+    for seal in vault.state["seals"]:
+        vault.verify_pins(seal)          # FrozenValidator: validator code + rules unchanged
     reg = TrialRegistry(REG)
     if not a.summary_only:
         for name, fn in STRATS.items():

@@ -18,7 +18,9 @@ from statistics import NormalDist
 
 _N = NormalDist()
 EULER = 0.5772156649015329
-VALIDATOR_FILES = ("registry.py", "walkforward.py", "markout.py", "gate.py", "robustness.py")
+VALIDATOR_FILES = ("registry.py", "walkforward.py", "markout.py", "gate.py", "robustness.py",
+                   "verdict.py", "pbo.py", "spa.py", "mintrl.py", "stability.py", "costs_curve.py",
+                   "regime_split.py", "bootstrap.py", "capacity.py", "prereg.py", "vault.py")
 
 
 def expected_max_sharpe(n_trials: int, sr_var: float) -> float:
@@ -69,7 +71,7 @@ class FrozenValidator:
     @staticmethod
     def code_hash() -> str:
         here = Path(__file__).parent
-        return _sha(b"".join((here / f).read_bytes() for f in VALIDATOR_FILES))
+        return _sha(b"".join((here / f).read_bytes() for f in VALIDATOR_FILES if (here / f).exists()))
 
     @staticmethod
     def freeze(lock_path: str | Path, data_path: str | Path) -> None:

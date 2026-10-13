@@ -28,9 +28,24 @@ class BTResult:
 
 
 def run(weights: pd.DataFrame, returns: pd.DataFrame, side_cost: dict[str, float],
-        funding: pd.DataFrame | None = None, delay: int = 1) -> BTResult:
+        funding: pd.DataFrame | None = None, delay: int = 1, fill: str = "close",
+        opens: pd.DataFrame | None = None, impact: dict | None = None) -> BTResult:
+    """fill='close' (legacy): held[t] = W[t-1-delay] earns close-to-close returns.
+    fill='next_open' (R11): a signal at the close of t is filled at the OPEN of t+1 (+delay bars)
+    and earns open-to-open returns; requires `opens` aligned with `returns`.
+    impact={'sigma': DataFrame, 'adv': DataFrame, 'capital': float, 'k': float} adds the
+    square-root slippage k*sigma*sqrt(q/ADV) per side on top of side_cost (R11/R14)."""
     if delay < 0:
         raise ValueError("delay must be >= 0")
+    if fill not in ("close", "next_open"):
+        raise ValueError("fill must be 'close' or 'next_open'")
+    if fill == "next_open":
+        if opens is None:
+            raise ValueError("fill='next_open' needs opens")
+        o = opens.reindex(index=returns.index, columns=returns.columns)
+        returns = o.pct_change(fill_method=None).shift(-1)    # open[t] -> open[t+1], stamped at t
+        # stamped at t means earned by the position entered at open t: held[t] = W[t-1-delay]
+        # with delay>=1 a close-of-(t-2) signal at least, i.e. filled at the next open or later.
     weights = weights.reindex(returns.index).fillna(0.0)
     held = weights.shift(1 + delay).fillna(0.0)
     gross = (held * returns.fillna(0.0)).sum(axis=1)
@@ -39,6 +54,14 @@ def run(weights: pd.DataFrame, returns: pd.DataFrame, side_cost: dict[str, float
     else:
         cvec = pd.Series(side_cost).reindex(held.columns).fillna(0.0)
     trade = held.diff().abs().fillna(held.abs())
+    if impact is not None:
+        sig = impact["sigma"].reindex(index=held.index, columns=held.columns).ffill()
+        adv = impact["adv"].reindex(index=held.index, columns=held.columns).ffill()
+        q = trade * impact["capital"]
+        extra = (impact.get("k", 1.0) * sig * np.sqrt(q / adv.where(adv > 0))).fillna(0.0)
+        base = cvec if isinstance(cvec, pd.DataFrame) else pd.DataFrame(
+            np.broadcast_to(cvec.values, held.shape), index=held.index, columns=held.columns)
+        cvec = base + extra
     cost = (trade * cvec).sum(axis=1) if isinstance(cvec, pd.DataFrame) else (trade * cvec).sum(axis=1)
     fund = pd.Series(0.0, index=held.index)
     if funding is not None:

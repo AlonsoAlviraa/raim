@@ -16,6 +16,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from raim.research.registry import TrialRegistry  # noqa: E402
+from raim.research.vault import Vault  # noqa: E402
 from raim.strategies import basis, data, engine, leadlag, pairs, trend  # noqa: E402
 from raim.strategies.costs import STRESS2X, VIP0  # noqa: E402
 from raim.strategies.wf import walk_forward  # noqa: E402
@@ -39,6 +40,7 @@ def avail(market):
 
 def save(name, res, extra=None):
     OUT.mkdir(parents=True, exist_ok=True)
+    Vault().guard(name.replace("_stress2x", ""), res["oos_daily"].index)   # R3: never read the vault
     m = res["metrics"]
     payload = {"name": name, "metrics": m, "folds": res["folds"], **(extra or {})}
     (OUT / f"{name}.json").write_text(json.dumps(payload, indent=2, default=str))
@@ -260,6 +262,7 @@ STRATS = {"S1_basis_arb": s1, "S2_funding_carry": s2, "S3_donchian_ensemble": s3
 
 
 RF_ANNUAL = 0.04   # USD stablecoin/T-bill proxy: the opportunity cost of idle capital
+rules_verdict_pointer = "see docs/research/rules_rescore_2026-10.md (raim.research.verdict)"
 
 
 def _sr_var(trials):
@@ -273,6 +276,8 @@ def _sr_var(trials):
 
 
 def summarize(reg):
+    """Descriptive summary only. The VERDICT lives in ONE place, raim.research.verdict, with
+    thresholds in configs/research_rules.yaml (run scripts/rescore_rules.py)."""
     trials = reg.all()
     n, var = len(trials), _sr_var(trials)
     rows = []
@@ -288,9 +293,6 @@ def summarize(reg):
         dfam = engine.dsr(m, len(ft), _sr_var(ft) if len(ft) > 2 else var)
         p0 = engine.psr0(m)
         fp, nf = m.get("folds_positive", 0), max(m.get("n_folds", 1), 1)
-        verdict = ("PROMOTE" if mx["sharpe"] > 1.0 and d > 0.95 and m["max_dd"] > -0.20
-                   and fp >= 2 / 3 * nf and m["sharpe"] > bh["sharpe"] else
-                   "WATCH" if mx["sharpe"] > 0.5 and p0 > 0.9 else "KILL")
         rows.append({"strategy": j["name"], "oos_start": str(oos.index[0].date()),
                      "oos_end": str(oos.index[-1].date()), "oos_sharpe": round(m["sharpe"], 2),
                      "sharpe_xs_rf4": round(mx["sharpe"], 2),
@@ -303,7 +305,7 @@ def summarize(reg):
                      "days_active": round(m.get("pct_days_active", 0), 2),
                      "folds_pos": f"{fp}/{nf}",
                      "btc_bh_sharpe": round(bh["sharpe"], 2), "btc_bh_maxdd": round(bh["max_dd"], 3),
-                     "btc_bh_ann_ret": round(bh["ann_ret"], 3), "verdict": verdict})
+                     "btc_bh_ann_ret": round(bh["ann_ret"], 3), "verdict": rules_verdict_pointer})
     df = pd.DataFrame(rows)
     df.to_csv(OUT / "summary.csv", index=False)
     (OUT / "summary.json").write_text(json.dumps({"n_trials": n, "sr_var_daily": var,
@@ -320,6 +322,9 @@ def main():
     ap.add_argument("--summary-only", action="store_true")
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
+    vault = Vault()
+    for seal in vault.state["seals"]:
+        vault.verify_pins(seal)          # FrozenValidator: validator code + rules unchanged
     reg = TrialRegistry(OUT / "trials.jsonl")
     if not a.summary_only:
         for name, fn in STRATS.items():

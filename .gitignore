@@ -17,3 +17,4 @@ dist/
 *.parquet
 recordings/
 .pytest_cache/
+!registry/*.jsonl
