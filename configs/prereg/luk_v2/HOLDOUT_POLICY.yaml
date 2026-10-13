@@ -1,0 +1,17 @@
+# Holdout policy for luk-v2 (R3: Temporal Holdout Vault)
+# Sealed window: 2025-10-01 -> 2026-10-01 (last 12 months).
+# Development window: up to 2025-09-30 (strictly < 2025-10-01).
+
+holdout_id: holdout_2025-10_luk_v2
+holdout_start: "2025-10-01"
+holdout_end: "2026-10-01"
+dev_end: "2025-10-01"
+
+families:
+  L2_luk_smid_mom_fund:
+    r3_status: designer_contaminated
+    reason: >
+      Designer knows the 2025-26 US small/mid-cap and momentum regime path and designed luk-v2
+      after observing luk-v1 results and Martin Luk's 2025-2026 championship period. Holdout is
+      evaluated exactly once at the end of the run and reported honestly as designer_contaminated
+      (never treated as a clean R3 pass).
