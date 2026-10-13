@@ -1,0 +1,27 @@
+family: L1_luk_pullback_daily
+retroactive: false
+hypothesis: >
+  Among PIT S&P 500 stocks in a strong uptrend (EMA9>EMA21>EMA50, top-quintile RS, ADR20>=3.5%),
+  buying a one-day flush to the rising EMA9/EMA21 that closes green, with a stop at the flush-day low,
+  0.5% equity risk, 20% partial at +3R and an EMA9 trailing exit, beats SPY and cash net of costs.
+mechanism: >
+  Short-term liquidity-driven reversal inside intermediate-term momentum (Jegadeesh 1990; Da, Liu &
+  Schaumburg 2014; Jegadeesh & Titman 1993; George & Hwang 2004) plus convex payoff from trailing
+  exits (Zarattini, Pagani & Wilcox 2025). Counter-evidence: tight stops lose to costs (Lo & Remorov
+  2017); high-turnover names show short-term momentum, not reversal (Medhat & Schmeling 2022).
+universe: fja05680/sp500 PIT membership; Yahoo split-adjusted daily OHLCV; QQQ; FRED CPIAUCSL
+data: downloaded AFTER this commit; dev 2001-01-02..2025-10-01
+costs: 0.005 USD/share (min 1 USD) + tiered slippage 3/5/10 bps (+10 bps if price<10), stops 2x; stress 2x
+market_neutral: false
+benchmark_r7: SPY buy&hold + cash
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml (base)
+grid:
+  - {id: V0}
+  - {id: V1, trail: ema21}
+  - {id: V2, market_filter: none}
+  - {id: V3, market_filter: breadth}
+  - {id: V4, avwap_confluence: true}
+  - {id: V5, stop: low_minus_half_atr, stop_cap_adr: 1.0}
+  - {id: V6, rs: high52w}
+  - {id: V7, risk_scaling: qqq_vol}
