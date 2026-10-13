@@ -115,9 +115,10 @@ def verdict(rep: dict, rules_path: str | Path | None = None) -> dict:
     ch["R6"] = _c(None if pbo is None else pbo <= R["r6_pbo"]["max_pbo"], pbo, f"<= {R['r6_pbo']['max_pbo']}")
     # R7 SPA vs each benchmark
     spa = rep.get("spa") or {}
-    ps = [spa.get(b) for b in R["r7_spa"]["benchmarks"]]
+    bench = R["r7_spa"]["market_neutral_benchmarks"] if rep.get("market_neutral") else R["r7_spa"]["benchmarks"]
+    ps = [spa.get(b) for b in bench]
     ok7 = None if any(p is None for p in ps) else all(p <= R["r7_spa"]["max_p"] for p in ps)
-    ch["R7"] = _c(ok7, dict(zip(R["r7_spa"]["benchmarks"], ps)), f"p <= {R['r7_spa']['max_p']} vs all")
+    ch["R7"] = _c(ok7, dict(zip(bench, ps)), f"p <= {R['r7_spa']['max_p']} vs all")
     # R8 MinTRL + trades
     mt = min_trl(o["sr_daily"], o.get("skew", 0.0), o.get("kurt", 3.0), R["r8_mintrl"]["sr_star"],
                  R["r8_mintrl"]["confidence"])

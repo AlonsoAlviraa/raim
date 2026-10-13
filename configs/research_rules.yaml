@@ -2,7 +2,7 @@
 # SINGLE SOURCE OF TRUTH for every verdict threshold. Read only by raim.research.verdict.
 # CI (scripts/ci/check_rules_separation.py) rejects any change set that edits this file together
 # with research results (reports/, docs/research/). Bump `version` on every change.
-version: 1
+version: 2   # v2 (2026-10-13): market-neutral families are benchmarked vs cash only (R7)
 r1_prereg:
   max_variants_per_family: 50
   required_fields: [family, hypothesis, mechanism, universe, grid, metric]
@@ -25,6 +25,7 @@ r7_spa:
   bootstrap: 2000
   mean_block: 10
   benchmarks: [btc_buy_hold, cash]
+  market_neutral_benchmarks: [cash]   # dollar-neutral L/S books carry no BTC beta by construction
 r8_mintrl:
   sr_star: 0.0
   confidence: 0.95

@@ -123,3 +123,13 @@ def test_verdict_reads_thresholds_only_from_yaml():
     for f in ("scripts/run_strategies.py", "scripts/run_convex.py"):
         s = (ROOT / f).read_text()
         assert '"PROMOTE"' not in s and '"WATCH" if' not in s, f"duplicated verdict code in {f}"
+
+
+def test_market_neutral_benchmark_is_cash_only(tmp_path):
+    res, btc = _fake([0.0003 * k for k in range(10)], seed=2)
+    rep = _report(res, btc, tmp_path)
+    rep["spa"] = {"btc_buy_hold": 0.9, "cash": 0.01}
+    assert not verdict(rep)["checks"]["R7"]["pass"]
+    rep["market_neutral"] = True
+    c = verdict(rep)["checks"]["R7"]
+    assert c["pass"] and list(c["value"]) == ["cash"]
