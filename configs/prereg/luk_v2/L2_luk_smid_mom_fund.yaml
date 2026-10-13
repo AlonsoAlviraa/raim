@@ -1,0 +1,55 @@
+family: L2_luk_smid_mom_fund
+retroactive: false
+hypothesis: >
+  In a point-in-time US small/mid-cap universe ($300M-$20B CPI-adjusted market cap, unadjusted price >$5,
+  ADV$20 >$5M CPI-adjusted, strictly requiring >=4 distinct price points per stock-day via full OHLC with
+  open>0, high>0, low>0, close>0, high>=max(open,close), low<=min(open,close), and high>low),
+  selecting top-decile 6/12-month momentum leaders filtered by point-in-time SEC EDGAR fundamentals
+  (available only strictly after filing/acceptance date: YoY EPS growth >25%, YoY revenue growth >20%,
+  positive SUE / earnings acceleration / operating margin, or positive earnings-day price gap reaction)
+  and low-to-moderate turnover terciles, exiting without a tight intraday hard stop (rank drop or daily
+  close < EMA trail; conservative stop-first ordering whenever an intraday stop is active), beats SPY,
+  IWM, and cash net of realistic small-cap tiered transaction costs.
+mechanism: >
+  Intermediate-horizon price momentum (Jegadeesh & Titman 1993) combined with post-earnings-announcement
+  drift / fundamental momentum (Ball & Brown 1968; Bernard & Thomas 1989; Chan, Jegadeesh & Lakonishok
+  1996; Novy-Marx 2015), avoiding the high-turnover short-horizon reversal trap (Medhat & Schmeling 2022)
+  and avoiding daily-bar tight stop whipsaw (Kaminski & Lo 2014; Lo & Remorov 2017) identified in luk-v1.
+universe: >
+  US common stocks (NYSE/NASDAQ/AMEX, including delisted series where available from SEC EDGAR CIK-ticker
+  mappings, historical index snapshots, Stooq, and Yahoo Finance), filtered point-in-time to small/mid
+  caps ($300M <= MarketCap_PIT <= $20B in 2025-09 CPI-adjusted USD), unadjusted close > $5, ADV$20 > $5M
+  CPI-adjusted, and >=4 valid OHLC price points per stock-day (stock-days missing any of O/H/L/C or with
+  degenerate H==L are flagged and rejected).
+fundamentals_pit: >
+  SEC EDGAR XBRL companyfacts / Financial Statement Data Sets (10-Q / 10-K): each quarterly filing is
+  visible to the strategy strictly on the first trading session after its SEC acceptance/filing date
+  (filed_date + 1 session). Derived PIT features: EPS YoY growth, EPS QoQ growth, earnings acceleration
+  (delta YoY EPS growth), Standardized Unexpected Earnings (SUE_t = (EPS_q - EPS_{q-4}) / std_8q(EPS_q - EPS_{q-4})),
+  revenue YoY/QoQ growth, operating margin, shares outstanding (for PIT market cap), and earnings-report-day
+  return/gap reaction (catalyst proxy).
+intraday_and_ohlc_policy: >
+  1) Daily test (2009-01-02..2025-09-30 dev, 2025-10-01..2026-10-01 holdout): every stock-day must have all 4
+     OHLC price points valid and non-degenerate; intra-bar OHLC ordering ambiguity is resolved conservatively
+     (stop-first assumption whenever stop and target are both touched in a bar unless open >= target).
+  2) Clearly separated intraday sub-period test (~730 calendar days of free Yahoo 60m / 1h intraday bars,
+     plus audit of Stooq/Alpaca/Polygon/Tiingo/Databento free tiers): tests intraday flush entry + low-of-day
+     stop execution with 6-7 price bars per session (>=24 price points/day) vs daily OHLC execution on the
+     same sub-period.
+costs: >
+  Small/mid-cap tiered one-way slippage by CPI-adjusted ADV$20: >=$100M: 8 bps, $25M-$100M: 15 bps,
+  $5M-$25M: 25 bps (+15 bps if unadjusted price < $10; 2x slippage on stop fills), plus $0.005/share
+  commission (min $1.00); evaluated at 1x base and 2x stress (R10) and +1 bar execution delay (R11).
+market_neutral: false
+benchmark_r7: SPY buy&hold, IWM buy&hold, and cash
+metric: daily net Sharpe of purged walk-forward OOS (5 folds, plateau-centre selection)
+validation: raim.research.verdict with configs/research_rules.yaml (base) and configs/research_rules_aggressive.yaml (-70% DD)
+grid:
+  - {id: V0, turnover_filter: ex_high_tercile, fund_mode: canonic_eps_rev, catalyst_mode: sue_or_gap, exit_mode: ema21_or_rank, mkt_filter: iwm_qqq_ema50, stop_mode: none, reb_days: 21}
+  - {id: V1, turnover_filter: low_tercile_only, fund_mode: canonic_eps_rev, catalyst_mode: sue_or_gap, exit_mode: ema21_or_rank, mkt_filter: iwm_qqq_ema50, stop_mode: none, reb_days: 21}
+  - {id: V2, turnover_filter: ex_high_tercile, fund_mode: accel_and_margin, catalyst_mode: sue_or_gap, exit_mode: ema21_or_rank, mkt_filter: iwm_qqq_ema50, stop_mode: none, reb_days: 21}
+  - {id: V3, turnover_filter: ex_high_tercile, fund_mode: canonic_eps_rev, catalyst_mode: earnings_gap_only, exit_mode: ema21_or_rank, mkt_filter: iwm_qqq_ema50, stop_mode: none, reb_days: 21}
+  - {id: V4, turnover_filter: ex_high_tercile, fund_mode: canonic_eps_rev, catalyst_mode: sue_or_gap, exit_mode: ema50_or_rank, mkt_filter: iwm_qqq_ema50, stop_mode: none, reb_days: 21}
+  - {id: V5, turnover_filter: ex_high_tercile, fund_mode: canonic_eps_rev, catalyst_mode: sue_or_gap, exit_mode: ema21_or_rank, mkt_filter: none, stop_mode: none, reb_days: 21}
+  - {id: V6, turnover_filter: ex_high_tercile, fund_mode: canonic_eps_rev, catalyst_mode: sue_or_gap, exit_mode: ema21_or_rank, mkt_filter: iwm_qqq_ema50, stop_mode: wide_2atr_stop_first, reb_days: 21}
+  - {id: V7, turnover_filter: ex_high_tercile, fund_mode: canonic_eps_rev, catalyst_mode: sue_or_gap, exit_mode: ema21_or_rank, mkt_filter: iwm_qqq_ema50, stop_mode: none, reb_days: 10}
